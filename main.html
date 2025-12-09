@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>OFF Movement</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+  body {
+    background: #00ffff;
+    color: #ff00ff;
+    font-family: 'Press Start 2P', cursive;
+    margin: 0;
+    overflow-x: hidden;
+    line-height: 1.45; /* slightly increased spacing */
+  }
+
+  /* Main container */
+  .container {
+    text-align: center;
+    border: 5px dotted #ff00ff;
+    padding: 40px;
+    background: rgba(255,255,255,0.1);
+    box-shadow: 0 0 20px #00ffff, 0 0 40px #ff00ff inset;
+    width: 90%;
+    max-width: 500px;
+    margin: 50px auto 0 auto;
+    position: relative;
+    z-index: 1;
+    transition: opacity 0.8s ease;
+  }
+
+  .off-symbol {
+    font-size: 10vw;
+    text-shadow: 2px 2px #ff0000, -2px -2px #00ff00, 2px -2px #0000ff, -2px 2px #ffff00;
+    animation: pulse 1s infinite alternate;
+    margin-bottom: 20px;
+  }
+
+  @keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1) rotate(-2deg); }
+    100% { transform: scale(1) rotate(2deg); }
+  }
+
+  /* Buttons ALWAYS vertical */
+  #mainButtons {
+    display: flex;
+    flex-direction: column;   /* FIXES the stacking issue */
+    align-items: center;      /* centers them like before */
+  }
+
+  .btn {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 1rem;
+    padding: 15px 25px;
+    margin: 10px 0; /* ensures vertical spacing */
+    border: 3px solid #ff00ff;
+    background: #00ffff;
+    color: #ff00ff;
+    cursor: pointer;
+    transition: all 0.2s;
+    width: 80%;
+    max-width: 280px; /* prevents stretching */
+  }
+
+  .btn:hover {
+    background: #ff00ff;
+    color: #00ffff;
+  }
+
+  form, .guide-page {
+    margin-top: 20px;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  input, textarea {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 0.8rem;
+    padding: 10px;
+    margin: 10px 0;
+    width: 250px;
+    border: 3px solid #ff00ff;
+    background: #00ffff;
+    color: #ff00ff;
+  }
+
+  textarea {
+    resize: none;
+    height: 80px;
+  }
+
+  .back-btn {
+    margin-top: 20px;
+    font-size: 0.7rem;
+  }
+
+  /* About section hidden initially */
+  #about {
+    position: fixed;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #00ffff;
+    color: #ff00ff;
+    text-align: center;
+    padding: 50px 20px;
+    box-sizing: border-box;
+    transition: top 0.8s ease;
+    overflow-y: auto;
+    z-index: 20;
+  }
+
+  #about.active {
+    top: 0;
+  }
+
+  /* Arrow at top of About */
+  .up-arrow {
+    font-size: 2.5rem;
+    color: #ff00ff;
+    cursor: pointer;
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    animation: bounceUp 1s infinite;
+  }
+
+  @keyframes bounceUp {
+    0% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(-8px); }
+    100% { transform: translateX(-50%) translateY(0); }
+  }
+
+  /* About page cards */
+  .about-cards {
+    display: flex;
+    justify-content: center;
+    margin-top: 40px;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+
+  .card {
+    background: rgba(255,255,255,0.1);
+    border: 3px dotted #ff00ff;
+    padding: 20px;
+    width: 230px;
+    box-shadow: 0 0 10px #00ffff, 0 0 20px #ff00ff inset;
+  }
+
+  .card h3 {
+    margin: 10px 0;
+  }
+
+  .card p {
+    font-size: 0.8rem;
+    margin: 5px 0;
+    line-height: 1.45;
+  }
+
+</style>
+</head>
+<body>
+  <div class="container" id="mainContainer">
+    <div class="off-symbol">ØFF</div>
+
+    <div id="mainButtons">
+      <button class="btn" id="guideBtn">How to Go OFF</button>
+      <button class="btn" id="startGroupBtn">Start a Group</button>
+      <button class="btn" id="aboutBtn">About</button>
+    </div>
+
+    <!-- Guide Page -->
+    <div class="guide-page" id="guidePage">
+      <h3>Turn Your Phone Into a Dumbphone</h3>
+      <p>1. Delete or disable all social media apps.</p>
+      <p>2. Disable Safari + App Store.</p>
+      <p>3. Put your Screen Time password in a notebook & hide it.</p>
+      <p>4. Move your phone out of reach: drawer, bag, other room.</p>
+      <p>5. Use "Beeper" to receive DMs without algorithmic feeds.</p>
+      <p>6. Keep only calls, texts, maps, & essential tools.</p>
+      <p>7. Join an OFF group for accountability + real community.</p>
+      <button class="btn back-btn" id="guideBackBtn">Back</button>
+    </div>
+
+    <!-- Start a Group Page -->
+    <div class="guide-page" id="startGroupPage">
+      <h3>Start a Group</h3>
+      <p>
+        The OFF Movement is fully decentralized — no chapters, no hierarchy, 
+        no gatekeeping. If you want an OFF Circle at your college or university, 
+        you can start one. All you need is a few people who care about being 
+        present, unplugged, and actually *alive* again.
+      </p>
+
+      <p>
+        Each group runs independently, but you're not on your own. 
+        We offer toolkits, starter guides, meeting structures, and 
+        strategy sheets you can use to launch with confidence.
+      </p>
+
+      <p>
+        If you want access to everything, just email us at 
+        <strong>youremail@placeholder.com</strong> and we’ll send you 
+        the full kit. You can also sign up for a short onboarding Zoom call 
+        where we walk you through how to build momentum, attract members, 
+        and make your OFF Circle actually sustainable — not just a week-long trend.
+      </p>
+
+      <p>
+        You choose the vibe. You choose the pace. You choose the people. 
+        We're just here to give you the tools, the momentum, 
+        and a place in the larger movement.
+      </p>
+
+      <button class="btn back-btn" id="startGroupBackBtn">Back</button>
+    </div>
+
+  </div>
+
+  <!-- About page -->
+  <div id="about">
+    <div class="up-arrow" id="upArrow">&#8593;</div>
+
+    <h2>About OFF</h2>
+
+    <p>
+      Ø symbolizes *empty space* — the quiet your brain almost never gets anymore.
+      OFF is a student-led push to rebuild our attention spans, our friendships,
+      and our future. Twice a month, students meet to share what’s working,
+      trade strategies, and keep each other accountable. It’s not therapy — 
+      it’s community maintenance.
+    </p>
+
+    <div class="about-cards">
+
+      <div class="card">
+        <h3>The Circles</h3>
+        <p>A simple meetup every two weeks. People talk honestly about their phone use, share strategies, and track progress together.</p>
+      </div>
+
+      <div class="card">
+        <h3>Events</h3>
+        <p>In-person card nights, board games, movie screenings, study tables, walks. People keep saying the same thing: “It feels like the old days.”</p>
+      </div>
+
+      <div class="card">
+        <h3>The Mission</h3>
+        <p>To escape algorithmic control, rebuild attention spans, and make offline life normal again — starting with college campuses.</p>
+      </div>
+
+    </div>
+  </div>
+
+<script>
+  const guideBtn = document.getElementById('guideBtn');
+  const startGroupBtn = document.getElementById('startGroupBtn');
+  const aboutBtn = document.getElementById('aboutBtn');
+  const guidePage = document.getElementById('guidePage');
+  const startGroupPage = document.getElementById('startGroupPage');
+  const mainButtons = document.getElementById('mainButtons');
+  const backBtnGuide = document.getElementById('guideBackBtn');
+  const startGroupBackBtn = document.getElementById('startGroupBackBtn');
+  const upArrow = document.getElementById('upArrow');
+  const about = document.getElementById('about');
+  const mainContainer = document.getElementById('mainContainer');
+
+  guideBtn.addEventListener('click', () => {
+    mainButtons.style.display = 'none';
+    guidePage.style.display = 'flex';
+  });
+
+  startGroupBtn.addEventListener('click', () => {
+    mainButtons.style.display = 'none';
+    startGroupPage.style.display = 'block';
+  });
+
+  aboutBtn.addEventListener('click', () => {
+    about.classList.add('active');
+    mainContainer.style.opacity = 0;
+  });
+
+  backBtnGuide.addEventListener('click', () => {
+    guidePage.style.display = 'none';
+    mainButtons.style.display = 'flex';
+  });
+
+  startGroupBackBtn.addEventListener('click', () => {
+    startGroupPage.style.display = 'none';
+    mainButtons.style.display = 'flex';
+  });
+
+  upArrow.addEventListener('click', () => {
+    about.classList.remove('active');
+    mainContainer.style.opacity = 1;
+  });
+</script>
+
+</body>
+</html>
