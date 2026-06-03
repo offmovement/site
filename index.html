@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ØFF</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@300;400&family=Share+Tech+Mono&family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --black: #0c0c0c;
+  --white: #f2f2f0;
+  --mid:   #777;
+  --rule:  #ccc;
+  --mono:  'Share Tech Mono', monospace;
+  --cond:  'Barlow Condensed', sans-serif;
+  --body:  'Barlow', sans-serif;
+  --pixel: 'Press Start 2P', monospace;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--white);
+  color: var(--black);
+  font-family: var(--body);
+  font-weight: 300;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+@keyframes gr {
+  0%,100%{ transform:translate(0,0) }
+  25%    { transform:translate(-2px,-1px) }
+  50%    { transform:translate(1px,2px) }
+  75%    { transform:translate(-1px,1px) }
+}
+.grain {
+  position: fixed; inset:-50%;
+  width:200%; height:200%;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 180px;
+  opacity: 0.03;
+  pointer-events: none;
+  z-index: 999;
+  animation: gr 0.3s steps(1) infinite;
+}
+
+#pline {
+  position: fixed; top:0; left:0;
+  height: 2px; background: var(--black);
+  width: 0; z-index: 998;
+  transition: width .05s;
+}
+
+.wrap {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 0 28px;
+}
+
+@keyframes blink {
+  0%,49.9%{ opacity:1 } 50%,100%{ opacity:0 }
+}
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 0 16px;
+  border-bottom: 2px solid var(--black);
+}
+.logo {
+  font-family: var(--pixel);
+  font-size: 13px;
+  color: var(--black);
+  text-decoration: none;
+  letter-spacing: .04em;
+}
+.status {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--mid);
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.status-dot {
+  width: 5px; height: 5px;
+  background: var(--black);
+  border-radius: 50%;
+  animation: blink 1.4s step-end infinite;
+  flex-shrink: 0;
+}
+
+.hero {
+  padding: 64px 0 60px;
+  border-bottom: 1px solid var(--rule);
+  position: relative;
+}
+
+.hero-title {
+  font-family: var(--cond);
+  font-weight: 900;
+  font-size: clamp(66px, 14.5vw, 120px);
+  line-height: .9;
+  letter-spacing: -.025em;
+  text-transform: uppercase;
+  color: var(--black);
+  margin-bottom: 44px;
+}
+
+.hero-title .word {
+  display: block;
+  overflow: hidden;
+}
+.hero-title .word-inner {
+  display: block;
+  transform: translateY(108%);
+  animation: wordUp 0.7s cubic-bezier(.22,1,.36,1) forwards;
+}
+.hero-title .word:nth-child(1) .word-inner { animation-delay: .12s }
+.hero-title .word:nth-child(2) .word-inner { animation-delay: .24s }
+.hero-title .word:nth-child(3) .word-inner { animation-delay: .36s }
+.hero-title .word:nth-child(4) .word-inner { animation-delay: .48s }
+
+@keyframes wordUp { to { transform:translateY(0) } }
+
+.hero-sub {
+  font-family: var(--mono);
+  font-size: 12px;
+  line-height: 1.9;
+  color: var(--black);
+  max-width: 520px;
+  letter-spacing: .015em;
+}
+.typed-cursor {
+  display: inline;
+  border-right: 1px solid var(--black);
+  margin-left: 1px;
+  animation: blink .65s step-end infinite;
+}
+
+.rv {
+  opacity: 0;
+  transition: opacity .5s ease;
+}
+.rv.on { opacity: 1; }
+.rv.d1 { transition-delay: .1s }
+.rv.d2 { transition-delay: .2s }
+.rv.d3 { transition-delay: .3s }
+
+.section {
+  padding: 60px 0;
+  border-bottom: 1px solid var(--rule);
+}
+.section-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .26em;
+  color: var(--mid);
+  text-transform: uppercase;
+  margin-bottom: 36px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.section-label::after {
+  content: ''; flex:1; height:1px;
+  background: var(--rule); max-width:80px;
+}
+
+.demand-list { list-style: none; }
+
+.demand-item {
+  display: grid;
+  grid-template-columns: 40px 1fr;
+  padding: 26px 0;
+  border-bottom: 1px solid var(--rule);
+  gap: 16px;
+  position: relative;
+  overflow: hidden;
+}
+.demand-item:last-child { border-bottom: none; }
+
+.demand-item::before {
+  content: ''; position: absolute; inset: 0;
+  background: var(--black);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform .45s cubic-bezier(.22,1,.36,1);
+  z-index: 0;
+}
+.demand-item:hover::before { transform: scaleX(1); }
+.demand-item:hover .demand-num,
+.demand-item:hover .demand-title,
+.demand-item:hover .demand-sub { color: var(--white); }
+
+.demand-num {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--rule);
+  letter-spacing: .08em;
+  padding-top: 4px;
+  position: relative; z-index: 1;
+  transition: color .25s;
+}
+.demand-body { position: relative; z-index: 1; }
+
+.demand-title {
+  font-family: var(--cond);
+  font-weight: 800;
+  font-size: clamp(19px, 3.2vw, 27px);
+  text-transform: uppercase;
+  letter-spacing: -.01em;
+  line-height: 1.1;
+  color: var(--black);
+  margin-bottom: 10px;
+  transition: color .25s;
+}
+.demand-sub {
+  font-family: var(--mono);
+  font-size: 11px;
+  line-height: 1.85;
+  color: var(--mid);
+  letter-spacing: .01em;
+  transition: color .25s;
+}
+
+.brief {
+  font-family: var(--mono);
+  font-size: 12px;
+  line-height: 2;
+  color: var(--black);
+  max-width: 600px;
+}
+.brief strong { font-weight: 500; }
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  border: 1px solid var(--rule);
+  margin-top: 44px;
+}
+.stat {
+  padding: 24px;
+  border-right: 1px solid var(--rule);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.stat:last-child { border-right: none; }
+
+.stat-n {
+  font-family: var(--cond);
+  font-weight: 900;
+  font-size: clamp(32px, 6vw, 52px);
+  line-height: 1;
+  color: var(--black);
+  letter-spacing: -.03em;
+  display: block;
+  margin-bottom: 7px;
+  opacity: 0;
+  transition: opacity .5s ease;
+}
+.stat.on .stat-n { opacity: 1; }
+.stat:nth-child(2).on .stat-n { transition-delay: .1s; }
+.stat:nth-child(3).on .stat-n { transition-delay: .2s; }
+
+.stat-d {
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--mid);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  line-height: 1.6;
+}
+
+.school-block {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 36px;
+  flex-wrap: wrap;
+}
+.school-text {
+  font-family: var(--mono);
+  font-size: 12px;
+  line-height: 1.95;
+  color: var(--black);
+  max-width: 380px;
+}
+
+.btn {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--white);
+  background: var(--black);
+  border: 1px solid var(--black);
+  padding: 13px 26px;
+  cursor: pointer;
+  text-decoration: none;
+  flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+  transition: color .3s;
+  display: inline-block;
+}
+.btn::before {
+  content: ''; position: absolute; inset: 0;
+  background: var(--white);
+  transform: translateY(100%);
+  transition: transform .35s cubic-bezier(.22,1,.36,1);
+}
+.btn:hover { color: var(--black); }
+.btn:hover::before { transform: translateY(0); }
+.btn-label { position: relative; z-index: 1; }
+
+.bottom-area {
+  padding: 64px 0 40px;
+}
+.closing {
+  font-family: var(--cond);
+  font-weight: 900;
+  font-size: clamp(52px, 12vw, 100px);
+  text-transform: uppercase;
+  line-height: .88;
+  letter-spacing: -.025em;
+  color: var(--black);
+  margin-bottom: 44px;
+}
+.closing-strike {
+  display: inline-block;
+  position: relative;
+}
+.closing-strike::after {
+  content: '';
+  position: absolute;
+  top: 50%; left: 0;
+  height: 4px;
+  background: var(--black);
+  width: 0;
+  transform: translateY(-50%);
+  transition: width 1s cubic-bezier(.22,1,.36,1);
+}
+.closing-strike.on::after { width: 100%; }
+
+.bottombar {
+  border-top: 2px solid var(--black);
+  padding: 16px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 32px;
+}
+.bottombar-copy {
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--mid);
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+.bottombar-links { display: flex; gap: 22px; }
+.bottombar-links a {
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--mid);
+  text-decoration: none;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  transition: color .2s;
+}
+.bottombar-links a:hover { color: var(--black); }
+
+.modal-bg {
+  display: none; position:fixed; inset:0;
+  background: rgba(242,242,240,.97);
+  z-index: 800;
+  align-items: center; justify-content:center;
+  padding: 24px;
+}
+.modal-bg.open { display: flex; }
+.modal {
+  background: var(--white);
+  border: 2px solid var(--black);
+  padding: 40px;
+  max-width: 480px; width:100%;
+  position: relative;
+  animation: mIn .4s cubic-bezier(.22,1,.36,1);
+}
+@keyframes mIn {
+  from { opacity:0; transform:translateY(16px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+.modal-close {
+  position: absolute; top:16px; right:16px;
+  font-family: var(--mono); font-size:10px;
+  color: var(--mid); background:none; border:none;
+  cursor: pointer; letter-spacing:.14em;
+  text-transform: uppercase;
+  transition: color .2s;
+}
+.modal-close:hover { color: var(--black); }
+.modal-title {
+  font-family: var(--cond);
+  font-weight: 900;
+  font-size: 30px;
+  text-transform: uppercase;
+  letter-spacing: -.01em;
+  color: var(--black);
+  margin-bottom: 28px;
+  line-height: 1.05;
+}
+.form-field { margin-bottom: 16px; }
+.form-field label {
+  display: block; font-family: var(--mono);
+  font-size: 9px; letter-spacing:.2em;
+  color: var(--mid); text-transform:uppercase;
+  margin-bottom: 7px;
+}
+.form-field input,
+.form-field textarea {
+  width: 100%; background: transparent;
+  border: none; border-bottom: 1px solid var(--black);
+  color: var(--black); font-family: var(--mono);
+  font-size: 13px; padding: 7px 0; outline:none;
+  border-radius: 0;
+}
+.form-field textarea { resize:none; height:56px; }
+.form-note {
+  font-family: var(--mono); font-size:10px;
+  color: var(--mid); margin-top:16px; line-height:1.7;
+  letter-spacing: .03em;
+}
+.form-success {
+  display: none;
+  font-family: var(--cond);
+  font-size: 30px; font-weight:900;
+  text-transform: uppercase; color: var(--black);
+  letter-spacing: -.01em; line-height:1.2;
+}
+
+</style>
+</head>
+<body>
+
+<div class="grain"></div>
+<div id="pline"></div>
+
+<div class="modal-bg" id="schoolModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">[ close ]</button>
+    <div class="modal-title">Join us.</div>
+    <div id="formWrap">
+      <div class="form-field"><label>Your name</label><input type="text"></div>
+      <div class="form-field"><label>Your school or city</label><input type="text"></div>
+      <div class="form-field"><label>Email</label><input type="email"></div>
+      <div class="form-field">
+        <label>What's happening where you are? (optional)</label>
+        <textarea></textarea>
+      </div>
+      <button class="btn" style="margin-top:22px;width:100%;" onclick="submitForm()">
+        <span class="btn-label">[ join ]</span>
+      </button>
+      <p class="form-note">By clicking join, you agree to receive next steps via email. No spam, guaranteed. View our <a href="https://offmovement.org/privacy" target="_blank">Privacy Policy</a> for more information.</p>
+      <p class="form-note" style="margin-top:10px;">By joining, you confirm that you are located in the United States.</p>
+    </div>
+    <div class="form-success" id="formSuccess">
+      Received.<br><br>
+      <span style="font-family:var(--mono);font-size:12px;font-weight:400;text-transform:none;letter-spacing:.05em;">We'll be in touch.</span>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  
+  <div class="topbar">
+    <a class="logo" href="#">ØFF</a>
+    <div class="status">
+      <span class="status-dot"></span>launching soon
+    </div>
+  </div>
+
+  
+  <div class="hero">
+    <h1 class="hero-title">
+      <span class="word"><span class="word-inner">You</span></span>
+      <span class="word"><span class="word-inner">never</span></span>
+      <span class="word"><span class="word-inner">agreed</span></span>
+      <span class="word"><span class="word-inner">to this.</span></span>
+    </h1>
+    <p class="hero-sub" id="heroSub"><span id="heroText"></span><span class="typed-cursor"></span></p>
+    <div style="margin-top:32px;">
+      <button class="btn" onclick="openModal()">
+        <span class="btn-label">[ join the movement ]</span>
+      </button>
+    </div>
+  </div>
+
+  
+  <div class="section">
+    <div class="section-label rv">Our demands</div>
+    <ul class="demand-list">
+      <li class="demand-item rv d1">
+        <span class="demand-num">01</span>
+        <div class="demand-body">
+          <div class="demand-title">AI companies must be owned equally by every American.</div>
+          <div class="demand-sub">Not nationalization, but democratization. The massive economic wealth of AI cannot build a new aristocracy. Every adult citizen receives an equal equity stake. One person = one share.</div>
+        </div>
+      </li>
+      <li class="demand-item rv d2">
+        <span class="demand-num">02</span>
+        <div class="demand-body">
+          <div class="demand-title">Zero environmental footprint. No exceptions.</div>
+          <div class="demand-sub">Data centers must run on 100% self-supplied renewable energy. They must use closed-loop water systems that don't drain public taps, and they must keep quiet. AI cannot force local communities to pay its bills.</div>
+        </div>
+      </li>
+      <li class="demand-item rv d3">
+        <span class="demand-num">03</span>
+        <div class="demand-body">
+          <div class="demand-title">AI must never be used for war.</div>
+          <div class="demand-sub">Taking a human life must always be a human decision. Ban automation of any military strike, including the nuclear command chain. Prevent nuclear proliferation by freezing all AI-powered nuclear weapons research indefinitely.</div>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  
+  <div class="section">
+    <div class="section-label rv">Get involved</div>
+    <div class="school-block">
+      <p class="school-text rv d1">
+        This is happening everywhere. Find out what your school or city has already signed. We'll connect you with people near you — or help you get something started.
+      </p>
+      <button class="btn rv d2" onclick="openModal()">
+        <span class="btn-label">[ join us ]</span>
+      </button>
+    </div>
+  </div>
+
+  
+  <div class="section">
+    <div class="section-label rv">The U-M datacenter</div>
+    <p class="brief rv d1">
+      The University of Michigan has committed <strong>$850 million</strong> to build a datacenter with Los Alamos National Laboratory — the lab that invented the atomic bomb. A Los Alamos official confirmed that one of the two planned computers will run <strong>classified nuclear weapons work</strong>.
+      <br><br>
+      The facility is proposed for a 124-acre site on the Huron River in Ypsilanti, Michigan. <strong>84%</strong> of Los Alamos' federal budget goes to nuclear weapons. Over 900 U-M faculty, staff, and students have signed a petition demanding cancellation.
+    </p>
+    <div class="stats">
+      <div class="stat rv d1">
+        <span class="stat-n">$1.2B</span>
+        <span class="stat-d">Total project cost</span>
+      </div>
+      <div class="stat rv d2">
+        <span class="stat-n">84%</span>
+        <span class="stat-d">Los Alamos budget<br>for nuclear weapons</span>
+      </div>
+      <div class="stat rv d3">
+        <span class="stat-n">900+</span>
+        <span class="stat-d">Signatures demanding<br>cancellation</span>
+      </div>
+    </div>
+  </div>
+
+  
+  <div class="bottom-area rv">
+    <div class="closing">
+      Act.<br>while we still<br>have a choice.
+    </div>
+  </div>
+
+  
+  <div class="bottombar">
+    <span class="bottombar-copy">ØFF — no cookies</span>
+    <div class="bottombar-links">
+      <a href="#" onclick="openModal();return false;">join us</a>
+      <a href="https://offmovement.org/privacy" target="_blank">privacy</a>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const pline = document.getElementById('pline');
+window.addEventListener('scroll', () => {
+  const pct = window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100;
+  pline.style.width = pct + '%';
+}, { passive: true });
+
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('on');
+      io.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.rv, .stat').forEach(el => io.observe(el));
+
+const text = "AI is reshaping the economy, accelerating climate change, automating millions of jobs, and consuming water and land at an unprecedented scale. The decisions driving all of it were made in boardrooms and back channels without a vote, consent, or public record. And now it's being used to build nuclear weapons and wage war. ØFF exists because nobody asked for this.";
+const textEl = document.getElementById('heroText');
+const cursor = document.querySelector('.typed-cursor');
+let i = 0, done = false;
+function type() {
+  if (done) return;
+  if (i < text.length) {
+    textEl.textContent += text[i];
+    i++;
+    const c = text[i-1];
+    setTimeout(type, c === '.' ? 300 : c === ',' ? 150 : 20 + Math.random() * 14);
+  } else {
+    done = true;
+    if (cursor) cursor.style.animation = 'none';
+  }
+}
+setTimeout(type, 1000);
+
+function openModal()  { document.getElementById('schoolModal').classList.add('open'); }
+function closeModal() { document.getElementById('schoolModal').classList.remove('open'); }
+
+const FORM_ACTION = 'https://docs.google.com/forms/d/e/1FAIpQLSe9XfA60dlUWyIXoQA_LGn1bYcGNDxJUgmrK3H-8jPOMAk4_g/formResponse';
+const ENTRY_NAME   = 'entry.403225748';
+const ENTRY_SCHOOL = 'entry.1173524453';
+const ENTRY_EMAIL  = 'entry.1189360225';
+const ENTRY_NOTE   = 'entry.1298521177';
+
+function submitForm() {
+  const inputs = document.querySelectorAll('#formWrap input, #formWrap textarea');
+  const name   = inputs[0].value.trim();
+  const school = inputs[1].value.trim();
+  const email  = inputs[2].value.trim();
+  const note   = inputs[3].value.trim();
+
+  if (!name || !email) {
+    inputs[!name ? 0 : 2].focus();
+    return;
+  }
+
+  const body = new URLSearchParams();
+  body.append(ENTRY_NAME,   name);
+  body.append(ENTRY_SCHOOL, school);
+  body.append(ENTRY_EMAIL,  email);
+  body.append(ENTRY_NOTE,   note);
+
+  fetch(FORM_ACTION, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: body.toString()
+  });
+
+  document.getElementById('formWrap').style.display = 'none';
+  document.getElementById('formSuccess').style.display = 'block';
+}
+
+document.getElementById('schoolModal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+</script>
+</body>
+</html>
