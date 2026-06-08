@@ -1,0 +1,1586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ØFF / University AI Report Card</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@300;400&family=Share+Tech+Mono&family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --black: #0c0c0c;
+  --white: #f2f2f0;
+  --mid:   #777;
+  --rule:  #ccc;
+  --mono:  'Share Tech Mono', monospace;
+  --cond:  'Barlow Condensed', sans-serif;
+  --body:  'Barlow', sans-serif;
+  --pixel: 'Press Start 2P', monospace;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--white);
+  color: var(--black);
+  font-family: var(--body);
+  font-weight: 300;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+@keyframes gr {
+  0%,100%{ transform:translate(0,0) }
+  25%    { transform:translate(-2px,-1px) }
+  50%    { transform:translate(1px,2px) }
+  75%    { transform:translate(-1px,1px) }
+}
+.grain {
+  position: fixed; inset:-50%;
+  width:200%; height:200%;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 180px;
+  opacity: 0.03;
+  pointer-events: none;
+  z-index: 999;
+  animation: gr 0.3s steps(1) infinite;
+}
+
+.wrap {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 0 28px;
+}
+
+@keyframes blink {
+  0%,49.9%{ opacity:1 } 50%,100%{ opacity:0 }
+}
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 0 16px;
+  border-bottom: 2px solid var(--black);
+}
+.logo {
+  font-family: var(--pixel);
+  font-size: 13px;
+  color: var(--black);
+  text-decoration: none;
+  letter-spacing: .04em;
+}
+.status {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--mid);
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.status-dot {
+  width: 5px; height: 5px;
+  background: var(--black);
+  border-radius: 50%;
+  animation: blink 1.4s step-end infinite;
+  flex-shrink: 0;
+}
+
+.hero {
+  padding: 64px 0 60px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.hero-title {
+  font-family: var(--cond);
+  font-weight: 900;
+  font-size: clamp(56px, 12vw, 100px);
+  line-height: .9;
+  letter-spacing: -.025em;
+  text-transform: uppercase;
+  color: var(--black);
+  margin-bottom: 44px;
+}
+.hero-title .word { display: block; overflow: hidden; }
+.hero-title .word-inner {
+  display: block;
+  transform: translateY(108%);
+  animation: wordUp 0.7s cubic-bezier(.22,1,.36,1) forwards;
+}
+.hero-title .word:nth-child(1) .word-inner { animation-delay: .12s }
+.hero-title .word:nth-child(2) .word-inner { animation-delay: .24s }
+.hero-title .word:nth-child(3) .word-inner { animation-delay: .36s }
+@keyframes wordUp { to { transform:translateY(0) } }
+
+.hero-body {
+  font-family: var(--mono);
+  font-size: 12px;
+  line-height: 1.9;
+  color: var(--black);
+  max-width: 520px;
+  letter-spacing: .015em;
+  opacity: 0;
+  transition: opacity 1s ease;
+}
+.hero-body.on { opacity: 1; }
+.hero-body p { margin-bottom: 1.4em; }
+.hero-body p:last-child { margin-bottom: 0; }
+
+.rv { opacity: 0; transition: opacity .5s ease; }
+.rv.on { opacity: 1; }
+.section {
+  padding: 60px 0;
+  border-bottom: 1px solid var(--rule);
+}
+.section-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .26em;
+  color: var(--mid);
+  text-transform: uppercase;
+  margin-bottom: 36px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.section-label::after {
+  content: ''; flex:1; height:1px;
+  background: var(--rule); max-width:80px;
+}
+.search-wrap {
+  margin-bottom: 40px;
+  position: relative;
+}
+.search-input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid var(--black);
+  color: var(--black);
+  font-family: var(--cond);
+  font-weight: 700;
+  font-size: 22px;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  padding: 10px 0;
+  outline: none;
+  border-radius: 0;
+}
+.search-input::placeholder {
+  color: var(--rule);
+  font-weight: 700;
+}
+.search-meta {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--mid);
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  margin-top: 10px;
+}
+.school-list { list-style: none; }
+
+.school-card {
+  border-bottom: 1px solid var(--rule);
+  overflow: hidden;
+}
+.school-card:first-child { border-top: 1px solid var(--rule); }
+
+.school-header {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 20px;
+  padding: 22px 24px;
+  cursor: pointer;
+  position: relative;
+  user-select: none;
+}
+.school-header::before {
+  content: ''; position: absolute; inset: 0;
+  background: var(--black);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform .4s cubic-bezier(.22,1,.36,1);
+  z-index: 0;
+}
+.school-card.open .school-header::before,
+.school-header:hover::before { transform: scaleX(1); }
+
+.school-name {
+  font-family: var(--cond);
+  font-weight: 800;
+  font-size: clamp(17px, 3vw, 24px);
+  text-transform: uppercase;
+  letter-spacing: -.01em;
+  color: var(--black);
+  position: relative; z-index: 1;
+  transition: color .25s;
+  line-height: 1.1;
+}
+.school-header:hover .school-name,
+.school-card.open .school-name { color: var(--white); }
+
+.school-header-right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  position: relative; z-index: 1;
+  flex-shrink: 0;
+}
+
+.grade-badge {
+  width: 22px;
+  height: 44px;
+  display: flex;
+  align-items: stretch;
+  flex-shrink: 0;
+  position: relative;
+}
+.grade-badge::after {
+  content: '';
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 2px;
+  transition: opacity .25s;
+}
+.grade-A::after  { background: #2a8a2a; }
+.grade-B::after  { background: #2a8a2a; }
+.grade-C::after  { background: #c8a000; }
+.grade-D::after  { background: #c05000; }
+.grade-F::after  { background: #c00000; }
+.grade-X::after  { background: #111; border: 1px solid #555; }
+.grade-A  { color: #1a7a1a; }
+.grade-B  { color: #4a7a00; }
+.grade-C  { color: #7a6500; }
+.grade-D  { color: #c05000; }
+.grade-F  { color: #c00000; }
+.grade-X  { color: #111111; }
+
+.school-header:hover .grade-badge::after,
+.school-card.open .grade-badge::after {
+  opacity: 0.6;
+}
+
+.toggle-icon {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--mid);
+  letter-spacing: .1em;
+  transition: color .25s;
+  width: 42px;
+  text-align: center;
+  white-space: nowrap;
+}
+.school-header:hover .toggle-icon,
+.school-card.open .toggle-icon { color: var(--white); }
+.school-panel {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height .55s cubic-bezier(.22,1,.36,1);
+  background: var(--black);
+}
+.school-card.open .school-panel { max-height: 1200px; }
+
+.panel-inner {
+  padding: 32px 24px 36px;
+  color: var(--white);
+}
+
+.panel-exposure-label {
+  font-family: var(--cond);
+  font-weight: 900;
+  font-size: 26px;
+  line-height: 1;
+  letter-spacing: -.02em;
+  text-transform: uppercase;
+}
+.panel-exposure-label.grade-F { color: #ff2222; }
+.panel-exposure-label.grade-D { color: #ff7700; }
+.panel-exposure-label.grade-C { color: #ccaa00; }
+.panel-exposure-label.grade-B { color: #4dcc4d; }
+.panel-exposure-label.grade-X { color: #aaa; }
+.panel-field {
+  margin-bottom: 22px;
+}
+.disclosure-status-line {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 0;
+}
+.disclosure-status-line .disclosure-pill {
+  margin-bottom: 0;
+}
+.panel-field-label {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  color: #666;
+  margin-bottom: 7px;
+}
+.panel-field-value {
+  font-family: var(--mono);
+  font-size: 11px;
+  line-height: 1.85;
+  color: #ccc;
+  letter-spacing: .01em;
+}
+.panel-field-value.alert {
+  color: #ff6666;
+}
+.panel-field-value.warn {
+  color: #ffaa44;
+}
+.panel-field-value.neutral {
+  color: #aaa;
+}
+
+.panel-sources {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid #333;
+}
+.panel-sources-label {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  color: #555;
+  margin-bottom: 10px;
+}
+.panel-source-link {
+  display: block;
+  font-family: var(--mono);
+  font-size: 10px;
+  color: #888;
+  text-decoration: none;
+  letter-spacing: .01em;
+  line-height: 1.7;
+  transition: color .2s;
+  word-break: break-all;
+}
+.panel-source-link:hover { color: var(--white); }
+.panel-source-link::before { content: '→ '; color: #555; }
+.rubric-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 8px;
+}
+.rubric-table th {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--mid);
+  text-align: left;
+  padding: 10px 14px 10px 0;
+  border-bottom: 1px solid var(--rule);
+  font-weight: 400;
+}
+.rubric-table td {
+  font-family: var(--mono);
+  font-size: 10px;
+  line-height: 1.75;
+  color: var(--black);
+  padding: 16px 14px 16px 0;
+  border-bottom: 1px solid var(--rule);
+  vertical-align: top;
+}
+.rubric-table tr:last-child td { border-bottom: none; }
+.rubric-swatch {
+  display: inline-block;
+  width: 22px;
+  height: 22px;
+  border-radius: 2px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.swatch-green  { background: #2a8a2a; }
+.swatch-yellow { background: #c8a000; }
+.swatch-orange { background: #c05000; }
+.swatch-red    { background: #c00000; }
+.swatch-black  { background: #111; border: 1px solid #555; }
+
+.no-results {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--mid);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  padding: 40px 0;
+  display: none;
+}
+
+.btn {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--white);
+  background: var(--black);
+  border: 1px solid var(--black);
+  padding: 13px 26px;
+  cursor: pointer;
+  text-decoration: none;
+  flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+  transition: color .3s;
+  display: inline-block;
+}
+.btn::before {
+  content: ''; position: absolute; inset: 0;
+  background: var(--white);
+  transform: translateY(100%);
+  transition: transform .35s cubic-bezier(.22,1,.36,1);
+}
+.btn:hover { color: var(--black); }
+.btn:hover::before { transform: translateY(0); }
+.btn-label { position: relative; z-index: 1; }
+
+.bottom-area { padding: 64px 0 40px; }
+.closing {
+  font-family: var(--cond);
+  font-weight: 900;
+  font-size: clamp(52px, 12vw, 100px);
+  text-transform: uppercase;
+  line-height: .88;
+  letter-spacing: -.025em;
+  color: var(--black);
+  margin-bottom: 44px;
+}
+.bottombar {
+  border-top: 2px solid var(--black);
+  padding: 16px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 32px;
+}
+.bottombar-copy {
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--mid);
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+.bottombar-links { display: flex; gap: 22px; }
+.bottombar-links a {
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--mid);
+  text-decoration: none;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  transition: color .2s;
+}
+.bottombar-links a:hover { color: var(--black); }
+.disclosure-pill {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  padding: 3px 9px;
+  border: 1px solid currentColor;
+  margin-bottom: 6px;
+}
+.pill-verified    { color: #ff2222; border-color: #ff2222; }
+.pill-suspected   { color: #ffaa44; border-color: #ffaa44; }
+.pill-undisclosed { color: #888;    border-color: #555; }
+#rubric-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  z-index: 200;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .4s ease;
+}
+#rubric-overlay.open {
+  opacity: 1;
+  pointer-events: all;
+}
+#rubric-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100vh;
+  width: min(520px, 92vw);
+  background: var(--white);
+  z-index: 201;
+  transform: translateX(100%);
+  transition: transform .5s cubic-bezier(.22,1,.36,1);
+  overflow-y: auto;
+  box-shadow: -4px 0 40px rgba(0,0,0,0.18);
+}
+#rubric-drawer.open {
+  transform: translateX(0);
+}
+#rubric-tab {
+  position: fixed;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  z-index: 202;
+  background: var(--black);
+  color: var(--white);
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  writing-mode: vertical-rl;
+  padding: 16px 10px;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  transition: transform .5s cubic-bezier(.22,1,.36,1), background .2s;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  user-select: none;
+}
+#rubric-tab:hover { background: #222; }
+@keyframes rubric-tab-tease {
+  0%   { transform: translateY(-50%) translateX(0); }
+  15%  { transform: translateY(-50%) translateX(-90px); }
+  30%  { transform: translateY(-50%) translateX(-65px); }
+  45%  { transform: translateY(-50%) translateX(-100px); }
+  60%  { transform: translateY(-50%) translateX(-60px); }
+  75%  { transform: translateY(-50%) translateX(-85px); }
+  88%  { transform: translateY(-50%) translateX(-10px); }
+  100% { transform: translateY(-50%) translateX(0); }
+}
+@keyframes rubric-drawer-tease {
+  0%   { transform: translateX(100%); }
+  15%  { transform: translateX(calc(100% - 90px)); }
+  30%  { transform: translateX(calc(100% - 65px)); }
+  45%  { transform: translateX(calc(100% - 100px)); }
+  60%  { transform: translateX(calc(100% - 60px)); }
+  75%  { transform: translateX(calc(100% - 85px)); }
+  88%  { transform: translateX(calc(100% - 10px)); }
+  100% { transform: translateX(100%); }
+}
+#rubric-tab.teasing {
+  animation: rubric-tab-tease 1.4s cubic-bezier(.34,1.56,.64,1) forwards;
+  transition: none;
+}
+#rubric-drawer.teasing {
+  animation: rubric-drawer-tease 1.4s cubic-bezier(.34,1.56,.64,1) forwards;
+  transition: none;
+}
+#rubric-tab.drawer-open {
+  transform: translateY(-50%) translateX(-520px);
+  animation: none !important;
+}
+@media (max-width: 560px) {
+  #rubric-tab.drawer-open {
+    transform: translateY(-50%) translateX(-92vw);
+  }
+}
+.rubric-tab-arrow {
+  font-style: normal;
+  transition: transform .4s ease;
+  display: inline-block;
+}
+#rubric-tab.drawer-open .rubric-tab-arrow {
+  transform: rotate(180deg);
+}
+#rubric-drawer-inner {
+  padding: 48px 36px 60px;
+}
+#rubric-drawer-inner .drawer-header {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--mid);
+  margin-bottom: 28px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+#rubric-drawer-inner .drawer-header::after {
+  content: ''; flex:1; height:1px; background: var(--rule);
+}
+#rubric-drawer-inner .drawer-desc {
+  font-family: var(--mono);
+  font-size: 11px;
+  line-height: 1.9;
+  color: var(--mid);
+  margin-bottom: 32px;
+  letter-spacing: .01em;
+}
+#rubric-close {
+  position: absolute;
+  top: 18px;
+  right: 20px;
+  background: none;
+  border: none;
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--mid);
+  cursor: pointer;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  padding: 6px 8px;
+  transition: color .2s;
+}
+#rubric-close:hover { color: var(--black); }
+.modal-bg {
+  display: none; position:fixed; inset:0;
+  background: rgba(242,242,240,.97);
+  z-index: 800;
+  align-items: center; justify-content:center;
+  padding: 24px;
+}
+.modal-bg.open { display: flex; }
+.modal {
+  background: var(--white);
+  border: 2px solid var(--black);
+  padding: 40px;
+  max-width: 480px; width:100%;
+  position: relative;
+  animation: mIn .4s cubic-bezier(.22,1,.36,1);
+}
+@keyframes mIn {
+  from { opacity:0; transform:translateY(16px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+.modal-close {
+  position: absolute; top:16px; right:16px;
+  font-family: var(--mono); font-size:10px;
+  color: var(--mid); background:none; border:none;
+  cursor: pointer; letter-spacing:.14em;
+  text-transform: uppercase;
+  transition: color .2s;
+}
+.modal-close:hover { color: var(--black); }
+.modal-title {
+  font-family: var(--cond);
+  font-weight: 900;
+  font-size: 30px;
+  text-transform: uppercase;
+  letter-spacing: -.01em;
+  color: var(--black);
+  margin-bottom: 28px;
+  line-height: 1.05;
+}
+.form-field { margin-bottom: 16px; }
+.form-field label {
+  display: block; font-family: var(--mono);
+  font-size: 9px; letter-spacing:.2em;
+  color: var(--mid); text-transform:uppercase;
+  margin-bottom: 7px;
+}
+.form-field input,
+.form-field textarea {
+  width: 100%; background: transparent;
+  border: none; border-bottom: 1px solid var(--black);
+  color: var(--black); font-family: var(--mono);
+  font-size: 13px; padding: 7px 0; outline:none;
+  border-radius: 0;
+}
+.form-field textarea { resize:none; height:56px; }
+.form-note {
+  font-family: var(--mono); font-size:10px;
+  color: var(--mid); margin-top:16px; line-height:1.7;
+  letter-spacing: .03em;
+}
+.form-success {
+  display: none;
+  font-family: var(--cond);
+  font-size: 30px; font-weight:900;
+  text-transform: uppercase; color: var(--black);
+  letter-spacing: -.01em; line-height:1.2;
+}
+</style>
+</head>
+<body>
+<div class="modal-bg" id="schoolModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">[ close ]</button>
+    <div id="formWrap">
+      <div class="modal-title">Join us.</div>
+      <p class="form-note" style="margin-top:-18px;margin-bottom:20px;">We'll connect you with students organizing nearby. Be in touch soon!</p>
+      <div class="form-field"><label>Your name</label><input type="text"></div>
+      <div class="form-field"><label>Your school</label><input type="text"></div>
+      <div class="form-field"><label>Email</label><input type="email"></div>
+      <div class="form-field">
+        <label>What's happening at your school? (optional)</label>
+        <textarea></textarea>
+      </div>
+      <button class="btn" style="margin-top:22px;width:100%;" onclick="submitForm()">
+        <span class="btn-label">[ join ]</span>
+      </button>
+      <p class="form-note">By clicking join, you agree to receive next steps via email. No spam, guaranteed. View our <a href="https://offmovement.org/privacy" target="_blank">Privacy Policy</a> for more information.</p>
+      <p class="form-note" style="margin-top:10px;">By joining, you confirm that you are located in the United States.</p>
+    </div>
+    <div class="form-success" id="formSuccess">
+      Received.<br>
+      <span style="font-family:var(--mono);font-size:12px;font-weight:400;text-transform:none;letter-spacing:.05em;">We'll be in touch.</span>
+    </div>
+  </div>
+</div>
+
+
+<div class="grain"></div>
+
+<div class="wrap">
+
+  <div class="topbar">
+    <a class="logo" href="https://offmovement.org">ØFF</a>
+    <nav style="display:flex;gap:24px;align-items:center;">
+      <a href="https://offmovement.org/about" target="_self" style="font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--black);text-decoration:none;opacity:.7;transition:opacity .2s;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=.7">About</a>
+      <button onclick="openModal()" style="font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--black);background:none;border:none;cursor:pointer;padding:0;opacity:.7;transition:opacity .2s;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=.7">Join Us</button>
+    </nav>
+  </div>
+
+  <div class="hero">
+    <h1 class="hero-title">
+      <span class="word"><span class="word-inner">The</span></span>
+      <span class="word"><span class="word-inner">Report</span></span>
+      <span class="word"><span class="word-inner">Card.</span></span>
+    </h1>
+    <div class="hero-body" id="heroBody">
+      <p>Every school on this list is either actively pouring capital into the AI industry, or keeping their investments under wraps. Few have disclosed the specifics. Some have been caught. And the others hope nobody looks closely.</p>
+      <p>We're changing that.</p>
+      <p>Search for your school. Read what we found. Share what you find.</p>
+      <p>See our report <a href="https://offmovement.org/universities-are-investing-billions-in-AI" target="_blank" style="color:inherit;text-decoration:underline;">here</a>.</p>
+    </div>
+  </div>
+<div class="section" style="padding-bottom: 0; border-bottom: none;">
+    <div class="section-label">Search your school</div>
+    <div class="search-wrap">
+      <input class="search-input" type="text" id="searchInput" placeholder="Type school name..." autocomplete="off" spellcheck="false">
+      <div class="search-meta" id="searchMeta"></div>
+    </div>
+    <div class="no-results" id="noResults">No match found. → <a href="https://offmovement.org" style="color:inherit;">Contact us to add your school.</a></div>
+<ul class="school-list" id="schoolList">
+    </ul>
+  </div>
+<div class="bottom-area rv">
+    <div class="closing">Make them<br>make it right.</div>
+    <a class="btn" href="https://offmovement.org">
+      <span class="btn-label">[ join the movement ]</span>
+    </a>
+  </div>
+
+  <div class="bottombar">
+    <span class="bottombar-copy">offmovement.org</span>
+    <div class="bottombar-links">
+      <a href="https://offmovement.org">Home</a>
+      <a href="https://offmovement.org/privacy" target="_blank">privacy</a>
+    </div>
+  </div>
+<div id="rubric-overlay" onclick="closeRubric()"></div>
+<div id="rubric-drawer">
+  <button id="rubric-close" onclick="closeRubric()">[ close ×]</button>
+  <div id="rubric-drawer-inner">
+    <div class="drawer-header"><strong>AI EXPOSURE RUBRIC</strong></div>
+    <div class="drawer-desc" style="margin-bottom: 24px;">
+      Each school is rated by AI exposure level, a cumulative measure of AI investments, partnerships, industry funding, and more. The vast majority of ratings are labelled as incomplete due to endowment nondisclosure policies. Nevertheless, we ranked them with the information that was available.
+      <span style="display:block;margin-top:1em;">Note: Many schools fund AI initiatives aimed at public-good applications, such as biomedical research, climate solutions, and sustainable agriculture. These projects are not counted in the rating, and related information may be absent from a school's description.</span>
+    </div>
+
+    <table class="rubric-table" style="margin-bottom: 20px;">
+      <thead>
+        <tr>
+          <th style="width:34px;">Symbol</th>
+          <th style="width:180px;">Label</th>
+          <th>What It Means</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="padding-right:16px;padding-top:14px;padding-bottom:14px;vertical-align:middle;">
+            <span style="font-family:var(--cond);font-size:28px;font-weight:900;color:var(--black);line-height:1;display:block;text-align:center;">!</span>
+          </td>
+          <td style="vertical-align:middle;"><strong style="font-family:var(--cond);font-weight:900;font-size:15px;letter-spacing:-.01em;text-transform:uppercase;color:#777;">Incomplete Rating</strong></td>
+          <td style="font-family:var(--mono);font-size:11px;line-height:1.7;color:var(--black);">This school does not disclose endowment investments. A complete AI exposure rating could not be generated because the underlying financial data is not publicly available.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <table class="rubric-table">
+      <thead>
+        <tr>
+          <th style="width:34px;">Symbol</th>
+          <th style="width:180px;">Level of AI Exposure</th>
+          <th>What It Means</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="padding-right:16px;padding-top:16px;padding-bottom:16px;vertical-align:top;"><span class="rubric-swatch swatch-red"></span></td>
+          <td><strong style="font-family:var(--cond);font-weight:900;font-size:15px;letter-spacing:-.01em;text-transform:uppercase;color:#c00000;">Extreme</strong></td>
+          <td>AI is structurally redefining this institution. Includes investments, gifts, military contracts, or endowment holdings worth hundreds of millions.</td>
+        </tr>
+        <tr>
+          <td style="padding-right:16px;padding-top:16px;padding-bottom:16px;vertical-align:top;"><span class="rubric-swatch swatch-orange"></span></td>
+          <td><strong style="font-family:var(--cond);font-weight:900;font-size:15px;letter-spacing:-.01em;text-transform:uppercase;color:#c05000;">Confirmed</strong></td>
+          <td>Significant AI exposure that falls short of institution-defining. Includes sub-$100M AI programs, such as industry research partnerships, collaborations with AI corporations, or AI-exposed endowment holdings.</td>
+        </tr>
+        <tr>
+          <td style="padding-right:16px;padding-top:16px;padding-bottom:16px;vertical-align:top;"><span class="rubric-swatch swatch-yellow"></span></td>
+          <td><strong style="font-family:var(--cond);font-weight:900;font-size:15px;letter-spacing:-.01em;text-transform:uppercase;color:#c8a000;">Moderate</strong></td>
+          <td>These institutions may have smaller scale or internal AI programs. They are not a standout feature of the institution.</td>
+        </tr>
+        <tr>
+          <td style="padding-right:16px;padding-top:16px;padding-bottom:16px;vertical-align:top;"><span class="rubric-swatch swatch-green"></span></td>
+          <td><strong style="font-family:var(--cond);font-weight:900;font-size:15px;letter-spacing:-.01em;text-transform:uppercase;color:#2a8a2a;">Low</strong></td>
+          <td>These institutions have negligible AI programs, partnerships, or investments. They fully disclose their endowment holdings at a high or itemized level.</td>
+        </tr>
+        <tr>
+          <td style="padding-right:16px;padding-top:16px;padding-bottom:16px;vertical-align:top;"><span class="rubric-swatch swatch-black"></span></td>
+          <td><strong style="font-family:var(--cond);font-weight:900;font-size:15px;letter-spacing:-.01em;text-transform:uppercase;color:#444;">Undisclosed</strong></td>
+          <td>No disclosure of investemnts. No significant AI programs/partnerships. AI exposure cannot be confirmed or ruled out; the absence of evidence is not evidence of absence.</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="drawer-desc" style="border-top: 1px solid var(--rule); padding-top: 20px; margin-top: 24px; color: #999; font-size: 10px; line-height: 1.85;">
+      This is a continuously updated resource committed to accuracy, clarity, and verifiability. All claims are intended to be supported by credible sources and subject to ongoing review.<br><br>Because this is an evolving document, some citations are still in the process of being added or formatted. However, we encourage you to fact check and verify the information found here yourself. If you spot an unlinked claim, a broken link, or a factual error, please help us keep this tool trustworthy by submitting a source or correction to <a href="mailto:info@offmovement.org" style="color:#999;text-decoration:underline;">info@offmovement.org</a>
+    </div>
+  </div>
+</div>
+<button id="rubric-tab" onclick="toggleRubric()">
+  <span class="rubric-tab-arrow">&#8250;</span>
+  rubric
+</button>
+
+</div>
+
+<script>
+
+const SCHOOLS = [
+  {
+    name: "University of Michigan",
+    grade: "F",
+    gradeClass: "grade-F",
+    pillClass: "pill-verified",
+    pillLabel: "confirmed",
+    finding: "UMich is financing $850M of a $1.2B high-performance computing facility being built in partnership with Los Alamos National Laboratory (LANL), America's primary nuclear weapons research lab. This facility will be used in nuclear weapons development and by private corporations. The university has considered building the facility in a low-income community in the 85th percentile for pollution. Separately, UMich's $20M early OpenAI investment in 2019 is now worth approximately $2 billion, 10% of their total endowment. This stake surfaced through documents filed in Elon Musk's federal lawsuit against OpenAI. Additionally, Michigan has committed $75M to Hydrazine Capital IV and separately $105M to Hydrazine II, totaling $180M in two funds tied to Sam Altman's personal AI venture vehicle. UMich is a founding member of OpenAI's NextGenAI consortium. The university's endowment ($21.2B) returned 15.5% in FY2025, outperforming nearly all peers. An independent MPI report has attributed this directly to AI and crypto exposure.",
+    disclosureNote: "The university did not transparently disclose its OpenAI stake. The investment was buried in endowment reports and only came to light through federal litigation. Specific AI holdings within the endowment's alternatives portfolio are not itemized or published.",
+    sources: [
+      { label: "404 Media — UMich nuclear weapons datacenter investigation", url: "https://www.404media.co/a-small-town-is-fighting-a-1-2-billion-ai-datacenter-for-americas-nuclear-weapon-scientists/" },
+      { label: "Planet Detroit — Lawmakers move to cancel $100M UMich grant", url: "https://planetdetroit.org/2025/12/university-of-michigan-data-center-funding/" },
+      { label: "Planet Detroit — UMich buys Huron River datacenter site", url: "https://planetdetroit.org/2026/03/university-of-michigan-huron-river-data-center/" },
+      { label: "The Next Web — Michigan OpenAI stake revealed", url: "https://thenextweb.com/news/michigan-openai-early-investment-billions-endowment" },
+      { label: "Michigan Daily — UMich AI & crypto endowment", url: "https://www.michigandaily.com/news/research/umich-reports-high-return-rate-on-endowment-after-increased-investments-in-ai-and-crypto/" },
+      { label: "Fortune — UMich $105M Hydrazine II and $75M Hydrazine IV commitment", url: "https://fortune.com/2023/12/20/university-of-michigan-wrote-sam-altman-venture-capital-firm-75-million-check" },
+      { label: "OpenAI — NextGenAI founding partners announcement", url: "https://openai.com/index/introducing-nextgenai/" }
+    ]
+  },
+  {
+    name: "MIT",
+    grade: "F",
+    gradeClass: "grade-F",
+    pillClass: "pill-suspected",
+    pillLabel: "suspected",
+    finding: "MIT boasts a $1 billion commitment to the Schwarzman College of Computing, anchored by a $350M gift from Blackstone CEO Stephen Schwarzman. Faculty and students published protest letters, organized boycotts, and petitioned to remove Schwarzman's name. The college moved into its new headquarters in 2023; the formal dedication ceremony was held in April 2024. The College's stated mission is explicit and sweeping: to 'support the rapid growth of computer science and AI,' 'facilitate collaborations between computing and every other field at MIT,' and integrate AI across all disciplines, including engineering, economics, biology, music, policy, and more. In other words, this is not merely a \"public-good\" research initiative as defined by the rubric. AI is the declared core of MIT's academic future, with 50 new faculty positions created across every MIT school. The Schwarzman College of Computing also runs industry-funded programs for AI. Furthermore, MIT is a founding member of OpenAI's NextGenAI consortium. The institution's endowment ($27.4B) returned 14.8% in FY2025, an outperformance of their Ivy League peers. An MPI report finds this was driven substantially by AI-correlated assets.",
+    disclosureNote: "MIT does not publish itemized endowment holdings. The university has not disclosed AI exposure through VC and private equity fund positions. Independent MPI factor analysis suspects significant AI exposure within the endowment portfolio based on return patterns.",
+    sources: [
+      { label: "MIT News — Schwarzman College announcement", url: "https://news.mit.edu/2018/mit-reshapes-itself-stephen-schwarzman-college-of-computing-1015" },
+      { label: "MIT Schwarzman College — Official mission statement", url: "https://computing.mit.edu/about" },
+      { label: "MIT Schwarzman College building — Moved in 2023, dedicated 2024", url: "https://betterworld.mit.edu/schwarzman-college-of-computing/" },
+      { label: "EdSurge — Faculty and student protests (Schwarzman housing/MBS concerns cited)", url: "https://www.edsurge.com/news/2019-02-27-1-billion-effort-to-rethink-computer-science-education-at-mit-sparks-interest-and-protests" },
+      { label: "Housing Is A Human Right — Schwarzman rent control opposition in California", url: "https://www.housingisahumanright.org/modern-day-robber-baron-the-sins-of-blackstone-ceo-stephen-schwarzman/" },
+      { label: "OpenAI — NextGenAI founding partners (MIT confirmed)", url: "https://openai.com/index/introducing-nextgenai/" },
+      { label: "MPI — AI and crypto as key FY2025 endowment performance drivers", url: "https://www.markovprocesses.com/news/new-research-from-mpi-shows-ai-and-digital-assets-are-likely-key-drivers-of-major-university-endowments-fy25-performance/" },
+      { label: "PitchBook — MIT 14.8% outperforms Ivy League peers FY2025", url: "https://pitchbook.com/news/articles/ivy-league-endowments-uncanny-year" }
+    ]
+  },
+  {
+    name: "Johns Hopkins University",
+    grade: "F",
+    gradeClass: "grade-F",
+    pillClass: "pill-undisclosed",
+    pillLabel: "undisclosed",
+    finding: "Johns Hopkins has one of the deepest entanglements of any university in both commercial tech and national security AI. On the commercial side: JHU runs the Johns Hopkins-Amazon Initiative for Interactive AI (AI2AI), which is now in its fourth year (2025). Amazon explicitly funds sponsored research projects 'of direct interest to Amazon,' co-shaping JHU's PhD AI talent pipeline toward commercial applications in machine learning, computer vision, and natural language understanding. On the national security side: JHU's Applied Physics Laboratory (APL) is the largest Pentagon-funded university research center in the United States. APL received approximately $1.6 billion per year from the Department of Defense in FY2023. In December 2024, APL was awarded a potential $3 billion IDIQ contract from the Missile Defense Agency alone. In 2025, DARPA awarded APL a $389M R&D and engineering contract. APL researchers participate in the development of numerous AI warfare systems, including one that allows a single operator to control swarms of combat drones. Revenue from APL accounts for more than 25% of JHU's total revenue. JHU also announced a major investment in a Data Science and AI Institute in 2023, with plans to nearly double its engineering school faculty. JHU's endowment (~$11.7B) is undisclosed and may contain AI-exposed assets.",
+    disclosureNote: "JHU does not publish itemized endowment holdings. AI exposure through the endowment's alternatives and private equity positions is not disclosed.",
+    sources: [
+      { label: "JHU Technology Ventures — Innovation Summit 2025 (AI2AI year 3 details)", url: "https://ventures.jhu.edu/news/johns-hopkins-researchers-pitch-future-of-science-and-tech-at-innovation-summit/" },
+      { label: "Amazon Science — JHU Amazon Initiative for Interactive AI announcement", url: "https://www.amazon.science/academic-engagements/amazon-and-johns-hopkins-announce-new-ai-institute" },
+      { label: "AI2AI — 2024-2025 Faculty Research Awards (8 per year)", url: "https://ai2ai.engineering.jhu.edu/2024-2025-faculty-research-awards/" },
+      { label: "AI2AI — 2024-2025 Fellows (4 per year)", url: "https://ai2ai.engineering.jhu.edu/2024-2025-ai2ai-fellows/" },
+      { label: "AI2AI Opportunities — Amazon-directed sponsored research terms", url: "https://ai2ai.engineering.jhu.edu/opportunities/" },
+      { label: "The Banner — JHU Applied Physics Lab Pentagon funding investigation", url: "https://www.thebanner.com/howard-county/johns-hopkins-applied-physics-laboratory-JLLU6TWWOFEYXOC5L57IXDFXGQ/" },
+      { label: "Executive Gov — JHU APL $3B Missile Defense Agency contract", url: "https://www.executivegov.com/articles/johns-hopkins-lab-3b-mda-contract-research-support" },
+      { label: "Executive Gov — JHU APL $389M DARPA R&D contract", url: "https://www.executivegov.com/articles/johns-hopkins-apl-darpa-contract-389m-rd-engineering" },
+      { label: "JHU Hub — Data Science and AI Institute announcement", url: "https://hub.jhu.edu/2023/08/03/johns-hopkins-data-science-artificial-intelligence-institute/" }
+    ]
+  },
+  {
+    name: "Stanford University",
+    grade: "F",
+    gradeClass: "grade-F",
+    pillClass: "pill-suspected",
+    pillLabel: "suspected",
+    finding: "Stanford is the intellectual birthplace of OpenAI (co-founded by Stanford affiliates) and home to the Stanford HAI (Human-Centered AI Institute). Stanford HAI simultaneously publishes critical AI research while maintaining deep industry partnerships with the same companies it studies. The institute regularly accepts funding, hosts fellows, and co-publishes research with corporations like Google, Microsoft, and OpenAI, whose products and practices HAI researchers are tasked with evaluating. This creates a direct, structural conflict of interest. Stanford's endowment is undisclosed and may contain AI-exposed assets.",
+    disclosureNote: "Stanford does not publish itemized endowment holdings. The university has not disclosed AI exposure through VC and private equity fund positions. Independent MPI factor analysis suspects significant AI exposure within the endowment portfolio based on return patterns.",
+    sources: [
+      { label: "Stanford — FY2025 endowment return report", url: "https://news.stanford.edu/stories/2025/10/report-investment-portfolio-value-endowment" },
+      { label: "Stanford HAI — 2025 AI Index Report", url: "https://hai.stanford.edu/ai-index/2025-ai-index-report" },
+      { label: "Stanford CRFM — Industry funders: Google, Microsoft, OpenAI, Anthropic, IBM", url: "https://crfm.stanford.edu/support.html" },
+      { label: "Stanford HAI — AI and Organizations Lab: Google DeepMind collaboration", url: "https://hai.stanford.edu/news/stanford-hai-launches-ai-and-organizations-lab-to-study-science-of-ai-in-the-workplace" }
+    ]
+  },
+  {
+    name: "Yale University",
+    grade: "F",
+    gradeClass: "grade-F",
+    pillClass: "pill-undisclosed",
+    pillLabel: "undisclosed",
+    finding: "Yale has committed $150M (announced August 2024) to build new AI infrastructure across campus, including compute infrastructure (~450 GPUs), 20+ new AI faculty hires, and the 'Clarity' platform, which deploys OpenAI's GPT-4o as the default AI tool for all Yale faculty, students, and staff. Yale Investments runs a formal Emerging Manager Incubator Program, which directly seeds new asset management firms, including some deploying AI-driven financial models. Yale Ventures is additionally commercializing university research into startups, including AI ventures like Leibniz AI, which seeks to automate legal reasoning. The $150M AI infrastructure commitment deepens all of this by placing AI at the core of research that directly feeds Yale's commercial investment and startup commercialization pipelines. Yale boasts a $44.1B endowment (as of June 2025) that is one of the most aggressively alternatives-heavy portfolios in the world, containing over $20 billion in leveraged buyout and venture capital funds. This endowment is described by Yale as investing across 'U.S. and foreign equities, hedge funds, leveraged buyouts, venture capital, real estate, and natural resources.' It almost certainly contains AI-exposed assets.",
+    disclosureNote: "Yale does not publish itemized endowment holdings. The university has not disclosed AI exposure through VC and private equity fund positions.",
+    sources: [
+      { label: "Yale Provost — $150M AI commitment announcement", url: "https://provost.yale.edu/news/advancing-yales-leadership-artificial-intelligence-support-faculty-students-and-staff" },
+      { label: "Yale Daily News — Yale selling $3B in private equity", url: "https://yaledailynews.com/blog/2025/06/11/yale-soon-to-sell-nearly-3-billion-in-private-equity/" },
+      { label: "Yale Investments — Emerging Manager Incubator Program", url: "https://www.ai-cio.com/news/yale-endowment-launches-incubator-program-for-new-asset-managers/" },
+      { label: "Yale News — How Yale Ventures is commercializing AI research", url: "https://news.yale.edu/2026/03/04/how-yale-ventures-accelerating-innovation" },
+      { label: "Yale Investments Office — Analyst job posting (VC/hedge fund pipeline)", url: "https://investments.yale.edu/jobs/6535113003" }
+    ]
+  },
+  {
+    name: "Carnegie Mellon University",
+    grade: "F",
+    gradeClass: "grade-F",
+    pillClass: "pill-undisclosed",
+    pillLabel: "undisclosed",
+    finding: "CMU is one of the largest recipients of Department of Defense funding of any U.S. university and directs significant resources toward military AI and autonomous weapons research. CMU leads a U.S. Army consortium (a 2019 contract) developing AI for 'national security and defense,' including adversarial algorithms and autonomous systems. CMU has established a formal 'AI for Autonomy Lab' (operational from 2024) that is explicitly built to support DoD weapon system deployment. A 2025 investigative report found CMU's defense dollars 'total billions.' Critics have described it as a 'war-machine pipeline.' CMU also received $15.5M from Arm and SoftBank for AI partnership with Japan's Keio University, an arrangement backed by Amazon, Microsoft, and NVIDIA.",
+    disclosureNote: "CMU does not publish itemized endowment holdings. AI exposure through the endowment's alternatives and private equity positions is not disclosed.",
+    sources: [
+      { label: "PublicSource — CMU defense dollars investigation", url: "https://www.publicsource.org/cmu-carnegie-mellon-university-defense-department-military-research-ai-drone/" },
+      { label: "VentureBeat — U.S. Army $72M CMU AI defense research (2019)", url: "https://venturebeat.com/ai/u-s-army-pledges-72-million-for-carnegie-mellon-ai-defense-research" },
+      { label: "CMU — SEI DoD contract renewed (up to $2.7B)", url: "https://www.cmu.edu/ambassadors/july-2020/sei-contract.html" },
+      { label: "CMU — Arm and SoftBank $15.5M for Keio University AI partnership", url: "https://www.cmu.edu/news/stories/archives/2025/May/keio" },
+      { label: "SEI — AI for Autonomy Lab history", url: "https://www.sei.cmu.edu/history-of-innovation/ai-for-autonomy-lab/" },
+      { label: "Inside Higher Ed — Military AI research at universities", url: "https://www.insidehighered.com/news/tech-innovation/artificial-intelligence/2024/01/31/does-military-ai-research-universities" }
+    ]
+  },
+  {
+    name: "University of Texas at Austin",
+    grade: "F",
+    gradeClass: "grade-F",
+    pillClass: "pill-verified",
+    pillLabel: "confirmed",
+    finding: "The Texas Advanced Computing Center (TACC) is the nation's largest academic supercomputer and serves a wide set of users, including private corporations to train, fine-tune, or evaluate AI models. TACC's Frontera system is funded primarily by the National Science Foundation and is open to researchers from any discipline and sector. UT Austin was also part of the NSF Institute for Foundations of Machine Learning (IFML), a $20M+ AI research consortium with industry and government applications.",
+    disclosureNote: "UT Austin's endowment is partially disclosed through UTIMCO (University of Texas Investment Management Company), the investment arm managing approximately $44 billion across the UT and Texas A&M systems. UTIMCO has disclosed venture positions in Thrive Capital, Sequoia, and Notable Capital. Specific AI exposure within individual fund positions is not itemized.",
+    sources: [
+      { label: "CNBC — Michael and Susan Dell $750M UT Austin donation", url: "https://www.cnbc.com/2026/04/21/michael-susan-dell-ut-austin-donation-medical-campus.html" },
+      { label: "Texas Tribune — Dell gift details", url: "https://www.texastribune.org/2026/04/21/texas-austin-dell-michael-susan-billion-research-medical-university/" },
+      { label: "NBC — First AI-native hospital announcement", url: "https://www.nbcdfw.com/news/local/texas-news/michael-susan-dell-gift-ut-750-million-to-fund-ai-native-medical-center/4013212/" },
+      { label: "TACC — Texas Advanced Computing Center overview", url: "https://www.tacc.utexas.edu/about/" }
+    ]
+  },
+  {
+    name: "University of Southern California",
+    grade: "F",
+    gradeClass: "grade-F",
+    pillClass: "pill-undisclosed",
+    pillLabel: "undisclosed",
+    finding: "In May 2026, Mark Stevens donated $200M to USC, renaming the institution's computing school the Mark and Mary Stevens School of Computing and Artificial Intelligence. Stevens is a venture capitalist and NVIDIA board member whose personal wealth is largely tied to NVIDIA stock, one of the world's leading producers of AI compute hardware. His donation is one of the largest gifts in USC's 146-year history. This gift was structured to infuse AI across all academic disciplines: USC's official announcement states the funds will advance AI in fields including 'national security, business and the arts.' AI integration is specifically cited for USC's #1-ranked game design program and the USC School of Cinematic Arts. Furthermore, USC has named Commerce as a priority with the launch of a new degree in 'Artificial Intelligence for Business.' USC additionally runs the USC+Amazon Center on Secure and Trusted Machine Learning and has multiple additional industry AI research partnerships.",
+    disclosureNote: "USC does not publish itemized endowment holdings. AI exposure through the endowment's VC and private equity positions is not disclosed.",
+    sources: [
+      { label: "USC Today — Stevens $200M AI initiative announcement", url: "https://today.usc.edu/usc-launches-transformational-ai-initiative-with-one-of-the-largest-gifts-in-university-history/" },
+      { label: "USC Today — Full gift details and cross-disciplinary scope", url: "https://today.usc.edu/mark-and-mary-stevens-give-200-million-to-power-ai-research-across-usc/" },
+      { label: "Fortune — Mark Stevens NVIDIA board member profile", url: "https://fortune.com/2026/05/07/mark-stevens-usc-200-million-ai-donation-nvidia-sequoia/" },
+      { label: "HPCwire — USC renames school following $200M gift", url: "https://www.hpcwire.com/off-the-wire/usc-renames-computing-school-following-200m-gift-for-ai-expansion/" },
+      { label: "Inside Higher Ed — $200M gift to USC", url: "https://www.insidehighered.com/news/quick-takes/2026/05/06/200m-gift-usc-will-advance-ai-research" }
+    ]
+  },
+  {
+    name: "Cornell University",
+    grade: "F",
+    gradeClass: "grade-F",
+    pillClass: "pill-undisclosed",
+    pillLabel: "undisclosed",
+    finding: "Workday and PeopleSoft co-founder David Duffield donated a record $371.5M to Cornell in January 2026. This is the largest gift in the school's 161-year history, following a $100M gift in 2025. The funds rename the college the Cornell David A. Duffield College of Engineering and create a Duffield Launch Fund explicitly earmarked for fields including artificial intelligence and data-driven decision-making. The 'data-driven decision-making' and AI focus cannot be cleanly separated from Duffield's commercial legacy. Duffield is the founder of six enterprise software companies, the most recent being Ridgeline, an AI platform for the investment management industry, which actively recruits from Cornell. His previous company Workday is currently facing a federal collective-action lawsuit (Mobley v. Workday) alleging its AI hiring screening tools discriminated against job applicants by race, age, and disability. A federal judge refused to dismiss this case, ruling Workday could be held liable as an 'agent' of employers. Duffield retains a ~10% stake in Workday.",
+    disclosureNote: "Cornell does not publish itemized endowment holdings. The university has not disclosed AI exposure through VC and private equity fund positions.",
+    sources: [
+      { label: "Cornell News — Record gift announcement", url: "https://www.news.cornell.edu/stories/2026/01/largest-gift-university-history-names-cornell-david-duffield-college-engineering" },
+      { label: "Ithaca Voice — Duffield gift details and Workday lawsuit disclosure", url: "https://ithacavoice.org/2026/01/tech-billionaire-gifts-record-breaking-371-5-m-to-cornell-engineering-school/" },
+      { label: "Chronicle of Philanthropy — Cornell $371.5M", url: "https://www.philanthropy.com/news/cornell-lands-371-5-million-from-billionaire-alumnus-david-duffield/" },
+      { label: "Higher Ed Dive — Cornell gift and research priorities", url: "https://www.highereddive.com/news/cornell-university-3715m-largest-gift-history-david-duffield/810288/" },
+      { label: "HR Dive — Workday AI discrimination lawsuit class certification", url: "https://www.hrdive.com/news/workday-must-supply-list-of-employers-who-enabled-hiredscore-ai/756506/" }
+    ]
+  },
+  {
+    name: "University of Illinois Urbana-Champaign",
+    grade: "F",
+    gradeClass: "grade-F",
+    pillClass: "pill-undisclosed",
+    pillLabel: "undisclosed",
+    finding: "In April 2024, Thomas Siebel, CEO of publicly traded enterprise AI company C3 AI, donated $50M to establish the Siebel School of Computing and Data Science. C3 AI issued a press release celebrating the announcement as a company milestone. Separately, UIUC is home to the National Center for Supercomputing Applications (NCSA), which is not merely an academic research facility: NCSA operates a formal Industry Partner Program that explicitly markets its computing infrastructure and student talent to private-sector companies. Use cases include production workflows, machine learning, and data management. NCSA boasts it has been 'advancing 1/3 of the Fortune 50' through its industry collaboration programs. NCSA is also a participant in C3.ai's Digital Transformation Institute. This is a partnership that accelerates commercial AI deployment across both business and government.",
+    disclosureNote: "UIUC does not publish itemized endowment holdings. AI exposure through the endowment's alternatives and private equity positions is not disclosed.",
+    sources: [
+      { label: "Grainger College of Engineering — Siebel School announcement", url: "https://grainger.illinois.edu/news/stories/66263" },
+      { label: "C3.ai — Corporate press release on Siebel School", url: "https://c3.ai/3-ai-celebrates-establishment-of-siebel-school-of-computing-data-science-at-the-university-of-illinois-urbana-champaign/" },
+      { label: "Inside Higher Ed — UIUC $50M computing school gift", url: "https://www.insidehighered.com/news/quick-takes/2024/04/25/university-illinois-campus-gets-50m-gift-computing-school" },
+      { label: "NCSA Industry Partner Program — commercial access to supercomputing", url: "https://www.ncsa.illinois.edu/resources-and-services/industry/" },
+      { label: "NCSA Institutional Partnerships — C3.ai DTI and Fortune 50 program", url: "https://www.ncsa.illinois.edu/resources-and-services/institutional-partnerships/" }
+    ]
+  },
+  {
+    name: "University of Florida",
+    grade: "F",
+    gradeClass: "grade-F",
+    pillClass: "pill-undisclosed",
+    pillLabel: "undisclosed",
+    finding: "UF has a $70M public-private AI partnership with NVIDIA (announced 2020, operational since 2021). This deal is composed of $25M from NVIDIA co-founder Chris Malachowsky, $25M in NVIDIA hardware/software, and $20M from UF itself to build the 'world's fastest AI supercomputer in higher education' (HiPerGator). In 2025, UF upgraded to HiPerGator 4th Gen — the first NVIDIA DGX B200 SuperPOD in U.S. higher education — extending its dominance in AI compute power. UF has also established an NVIDIA AI Technology Center on campus, embedding NVIDIA employees and graduate fellows in joint research operations. UF's Florida Institute for National Security (FINS) is an interdisciplinary hub with a mission described as 'the nation's leading hub for applied AI for national security.' FINS works directly with the NSA, DARPA, and the Air Force Office of Scientific Research. Its FINS Talent Pipeline program trains undergraduates specifically on HiPerGator in AI for national security before connecting them to defense contractors and intelligence agencies. Additionally, UF-Duke-UT Austin-UCSC collaborates on an Air Force Office of Scientific Research Center of Excellence for 'Assured Autonomy in Contested Environments.' This initiative focuses on building algorithms that enable machines to make intelligent decisions without any human input. UF strategically positions itself as Florida's AI powerhouse and a crucial node in the U.S. defense-AI complex.",
+    disclosureNote: "UF does not publish itemized endowment holdings. AI exposure through the endowment's VC and private equity positions is not disclosed.",
+    sources: [
+      { label: "UF Advancement — $70M NVIDIA partnership", url: "https://www.uff.ufl.edu/your-impact/uf-announces-70-million-artificial-intelligence-partnership-nvidia/" },
+      { label: "NVIDIA Developer Blog — UF AI partnership", url: "https://developer.nvidia.com/blog/uf-launches-ai-partnership-with-nvidia/" },
+      { label: "UF News — HiPerGator 4th Gen launch", url: "https://news.ufl.edu/2025/05/the-fourth-generation-model-of-ufs-hipergator/" },
+      { label: "FINS — Florida Institute for National Security about page", url: "https://fins.institute.ufl.edu/index.php/about/" },
+      { label: "UF News — FINS Talent Pipeline and NSA partnership", url: "https://news.ufl.edu/2024/05/fins-enters-education-agreement-with-nsf/" },
+      { label: "UF News — FINS talent pipeline funnels students to defense employers", url: "https://news.ufl.edu/2024/10/fins-talent-pipeline-program/" },
+      { label: "FINS Research Labs — DARPA and Air Force AFOSR partnerships", url: "https://fins.institute.ufl.edu/index.php/research/research-labs/" }
+    ]
+  },
+  {
+    name: "Princeton University",
+    grade: "F",
+    gradeClass: "grade-F",
+    pillClass: "pill-undisclosed",
+    pillLabel: "undisclosed",
+    finding: "Princeton partnered with Microsoft, CoreWeave (a major AI cloud infrastructure company), and New Jersey state officials to open the $72M+ NJ AI Hub in March 2025, physically located at 619 Alexander Road in West Windsor Township, NJ, adjacent to Princeton's campus. The Hub runs an AI startup accelerator and hosts Microsoft's Discovery AI research platform, one of only two sites worldwide. Princeton's $36.4B endowment allocates ~40% to private equity, likely including AI exposure. Princeton also invested in 300 Nvidia H100 GPUs as part of internal AI infrastructure expansion.",
+    disclosureNote: "Princeton does not publish itemized endowment holdings. AI exposure through the endowment's VC and private equity positions is not disclosed.",
+    sources: [
+      { label: "Princeton News — NJ AI Hub opening", url: "https://www.princeton.edu/news/2025/03/28/founding-partners-unveil-nj-ai-hub-center-innovation" },
+      { label: "CO/AI — Microsoft, CoreWeave $72M Princeton AI Hub", url: "https://getcoai.com/news/microsoft-coreweave-invest-72m-to-build-new-jersey-ai-hub/" }
+    ]
+  },
+  { name: "UC San Diego", grade: "F", gradeClass: "grade-F", pillClass: "pill-verified", pillLabel: "confirmed", finding: "The Halıcıoğlu School of Data Science and Computing was established in April 2026. It is funded by $125 million in total support from alumnus Taner Halıcıoğlu '96, $75M of which was originally used to create the Halıcıoğlu Data Science Institute (HDSI) in 2017, plus an additional $50M pledge. The school bridges HDSI and the San Diego Supercomputer Center (SDSC) into a single integrated school, allowing UCSD to be at the forefront of data science, AI, and advanced computing. The school's stated vision is to prepare the next generation of highly skilled workers to drive artificial intelligence advancements. HDSI maintains active industry partnerships with major tech companies such as Qualcomm and Google, among others. The UC system publishes its endowment holdings at a high level but does not itemize specific AI company exposure within VC/PE fund positions.", disclosureNote: "The UC system publicizes its endowment holdings at a high level, but does not itemize specific AI company exposure within VC/PE fund positions. A granular, fund-by-fund breakdown of AI company exposure is not made available.", sources: [{ label: "UCSD Today — Halıcıoğlu School of Data Science and Computing", url: "https://today.ucsd.edu/story/halicioglu-school-of-data-science-and-computing" }, { label: "UCSD Halıcıoğlu Data Science Institute", url: "https://datascience.ucsd.edu" }] },
+  { name: "University of Tennessee", grade: "F", gradeClass: "grade-F", pillClass: "pill-undisclosed", pillLabel: "undisclosed", finding: "The University of Tennessee's entanglement with AI infrastructure operates at a scale unmatched by both universities: UT co-owns and operates a massive national datacenter. Since 2000, UT has co-managed Oak Ridge National Laboratory through UT-Battelle, a 50-50 partnership with Battelle Memorial Institute. ORNL is the largest science and energy laboratory in the U.S. Department of Energy system. Research here explicitly spans AI, national security, nuclear science, and advanced computing. ORNL is also the home of Frontier, the world's fastest supercomputer. In October 2025, the DOE announced Lux (an AI-dedicated supercomputer) to be built at ORNL through a public-private partnership with AMD, a chip manufacturer. This partnership is estimated to be worth over $1 billion. The DOE is also accepting proposals for commercial AI data centers on the Oak Ridge Reservation itself. Additionally, UT launched AI Tennessee, a first-of-its-kind AI initiative that coordinates research, education, and workforce development across government, industry, and academia. Oak Ridge National Laboratory serves as a core partner along with Vanderbilt and the Tennessee Board of Regents. UT's endowment AI exposure through private equity and alternatives is not disclosed.", disclosureNote: "UT does not publish itemized endowment holdings. AI exposure through the endowment's alternatives and private equity positions is not disclosed.", sources: [
+    { label: "UT System — UT-Battelle partnership and ORNL co-management (80+ joint appointments confirmed)", url: "https://tennessee.edu/research/centers-institutes/" },
+    { label: "Chattanooga Times Free Press — ORNL Lux AI supercomputer: $1B+ AMD partnership", url: "https://www.timesfreepress.com/news/2025/oct/28/oak-ridge-national-laboratory-to-host-two-new-ai/" },
+    { label: "EurekAlert — AI Tennessee: statewide initiative with ORNL, Vanderbilt, industry", url: "https://www.eurekalert.org/news-releases/1114053" },
+    { label: "Data Center Dynamics — DOE soliciting commercial AI data centers at Oak Ridge", url: "https://www.datacenterdynamics.com/en/news/us-doe-eyes-ai-data-centers-at-oak-ridge-reservation-tennessee/" }
+  ] },
+  { name: "Virginia Tech", grade: "F", gradeClass: "grade-F", pillClass: "pill-undisclosed", pillLabel: "undisclosed", finding: "Virginia Tech is a major hub for military and defense AI engineering. Through its Ted and Karyn Hume Center for National Security and Technology, Virginia Tech maintains direct, funded partnerships with major defense contractors including Raytheon Technologies. Under the 'Raytheon Technologies Applications of Artificial Intelligence to Defense Systems' (RAAIDS) program, Virginia Tech uses its laboratories to build machine learning systems for autonomous warfare, military sensor processing, and battlespace automation. The RAAIDS program targets systems such as the Multi-Spectral Targeting System for airborne platforms, and aims to 'revolutionize the future battlespace and warfare strategies.' Virginia Tech does not publish itemized endowment holdings.", disclosureNote: "Virginia Tech does not publish itemized endowment holdings. AI exposure through the endowment's alternatives and private equity positions is not disclosed.", sources: [{ label: "Virginia Tech Hume Center — Raytheon AI partnership announcement", url: "https://vtx.vt.edu/articles/2022/04/eng-raytheon-ai.html" }, { label: "SMU News — RAAIDS program confirmed: Raytheon, VT, SMU partnership", url: "https://www.smu.edu/news/archives/2021/research/raytheon-partners-with-va-tech-and-smu-on-artificial-intelligence" }] },
+  {
+    name: "Harvard University",
+    grade: "D",
+    gradeClass: "grade-D",
+    pillClass: "pill-undisclosed",
+    pillLabel: "undisclosed",
+    finding: "Harvard is a founding member of OpenAI's NextGenAI consortium (March 2025), committing research infrastructure to OpenAI's technology ecosystem. Blackstone CEO Stephen Schwarzman (the MIT Schwarzman College donor) gave $5M to Harvard Business School for AI-in-business research. Harvard's $56.9B endowment returned 11.9% in FY2025, substantially attributed to AI-correlated assets. Harvard's ~$14B alternatives allocation almost certainly contains significant AI exposure through VC/PE fund wrappers.",
+    disclosureNote: "Harvard does not publish itemized holdings for its alternatives portfolio. AI exposure through the endowment's VC and private equity positions is not disclosed.",
+    sources: [
+      { label: "OpenAI NextGenAI consortium announcement", url: "https://aibusiness.com/nlp/openai-launches-50m-consortium-brings-ai-to-education" },
+      { label: "Harvard Financial Administration — Endowment overview", url: "https://finance.harvard.edu/endowment" }
+    ]
+  },
+  {
+    name: "UC Berkeley",
+    grade: "D",
+    gradeClass: "grade-D",
+    pillClass: "pill-verified",
+    pillLabel: "confirmed",
+    finding: "UC Berkeley's BAIR Lab is a private-public collaboration owned by the university. Here, corporations such as Meta, Amazon, Google, and Microsoft participate as industrial affiliates. They frequently fund research while university faculty direct the work and an advisory board approves proposals. Corporate researchers may collaborate and co-author papers, but Berkeley claims research direction remains with faculty — faculty members who may simultaneously hold research positions at these companies. Berkeley DeepDrive (BDD) is co-led by BAIR faculty and serves as a major industrial consortium focusing on autonomous vehicles and self-driving AI. These are the very same technologies displacing logistics workers, truck drivers, and delivery workers. BDD corporate partners include auto companies and tech firms whose autonomous vehicle programs benefit directly from Berkeley's academic research. Furthermore, the BAIR robotics program (RAIL Lab) trains machines to navigate warehouses, grab objects, and operate in complex real-world physical environments, directly contributing to research displacing warehouse workers. In 2024, UC Berkeley launched a formal AI Center of Excellence with Intel, with a focus on generative AI model inference optimization. This is applied R&D conducted inside a public university. In 2025, a $12M VC fund (The House Fund) was launched specifically to commercialize BAIR-affiliated startups and convert academic research directly into private equity. The UC Investment Office manages Berkeley's endowment allocation; the system publishes holdings at a high level but does not itemize specific AI company exposure within VC/PE fund positions.",
+    disclosureNote: "The UC system publicizes its endowment holdings at a high level, but does not itemize specific AI company exposure within VC/PE fund positions. A granular, fund-by-fund breakdown of AI company exposure within the endowment is not made available.",
+    sources: [
+      { label: "BAIR — BAIR Open Research Commons announcement", url: "https://bair.berkeley.edu/blog/future/" },
+      { label: "Daily Californian — Berkeley funding ethics investigation", url: "https://www.dailycal.org/2023/11/09/balancing-funding-ethics-uc-berkeley-researching-with-tech-leviathans" },
+      { label: "Daily Californian — $12M BAIR VC fund launch", url: "https://www.dailycal.org/news/campus/research-and-ideas/12m-grant-for-uc-berkeley-affiliated-ai-startups-launches/" },
+      { label: "Berkeley PATH — Berkeley DeepDrive autonomous vehicle consortium", url: "https://path.berkeley.edu/research/berkeley-deepdrive" },
+      { label: "Berkeley ITS — DRIVE AI autonomous vehicle deployment initiative", url: "https://its.berkeley.edu/driveai" },
+      { label: "EECS Berkeley — Intel AI Center of Excellence for generative AI", url: "https://eecs.berkeley.edu/2024/12/uc-berkeley-announces-ai-center-of-excellence/" }
+    ]
+  },
+  {
+    name: "University of Washington",
+    grade: "D",
+    gradeClass: "grade-D",
+    pillClass: "pill-undisclosed",
+    pillLabel: "undisclosed",
+    finding: "UW is one of only two U.S. universities selected for the $110M U.S.-Japan AI Partnership (2024), which is backed by Amazon, Microsoft, NVIDIA, and SoftBank. However, the more significant story is the UW+Amazon Science Hub, a formal joint infrastructure launched in 2022 that has embedded Amazon's commercial research agenda directly inside UW's Paul G. Allen School. Amazon directly funds fellowships and faculty research projects directed at Amazon's operational priorities. This includes autonomous robots designed to operate in warehouse environments and automate jobs. A 2024-25 faculty award funded research on 'path planning and task assignment of thousands of autonomous robots in warehouses,' using foundation models to optimize Amazon-scale logistics. A separate award funds 'hierarchical framework for scalable multi-agent autonomous mobility,' referring to autonomous systems for Amazon's delivery and logistics network. Multiple faculty hold concurrent Amazon Scholar appointments, meaning they are simultaneously UW professors and Amazon employees. This leaves open the possibility of Amazon directly steering what UW's PhD students and faculty build, with the outputs directly integrating into Amazon's automation efforts.",
+    disclosureNote: "UW does not publish itemized endowment holdings. AI exposure through the endowment's VC and private equity positions is not disclosed.",
+    sources: [
+      { label: "UW+Amazon Science Hub — 2024-25 Fellows and warehouse robotics awards", url: "https://www.sciencehub.uw.edu/2025/01/07/2024-25-amazon-fellows-faculty-research-awards/" },
+      { label: "Amazon Science — UW+Amazon Science Hub fellows announcement", url: "https://www.amazon.science/news-and-features/amazon-and-university-of-washington-announce-new-science-hub-fellows-and-research-awards" },
+      { label: "UW+Amazon Science Hub — New director from NVIDIA autonomous vehicle group", url: "https://www.sciencehub.uw.edu/?p=637" },
+      { label: "UW Allen School — AI groups and labs overview", url: "https://www.cs.washington.edu/research/artificial-intelligence/ai-groups-labs/" }
+    ]
+  },
+  { name: "Rice University", grade: "D", gradeClass: "grade-D", pillClass: "pill-undisclosed", pillLabel: "undisclosed", finding: "Rice has built a three-layered corporate AI infrastructure. The Rice AI Venture Accelerator (RAVA) was launched in partnership with Google Public Sector and Non Sibi Ventures. It operates out of Houston's Ion tech district as a commercialization engine designed to help AI startups scale, bring products to market, and generate returns for corporate partners. Second, the Ken Kennedy Institute's Corporate Partner Program sells tiered access (up to $25,000 annually) to Rice's machine learning students and research. Shell, ExxonMobil, and BP are among named partners buying 1-on-1 student access and campus speaking footprints. Third, Rice admins have publicly appeared at major energy summits like CERAWeek to highlight active partnerships that help industry navigate AI-driven workforce changes. They position Rice as a direct participant in corporate automation restructuring. Rice does not publish itemized endowment holdings.", disclosureNote: "Rice does not publish itemized endowment holdings. AI exposure through the endowment's alternatives and private equity positions is not disclosed.", sources: [{ label: "Rice AI Venture Accelerator (RAVA)", url: "https://www.prnewswire.com/news-releases/cinchops-selected-for-rice-universitys-ai-venture-accelerator-rava-302389456.html" }, { label: "Ken Kennedy Institute Corporate Partner Program", url: "https://kenkennedy.rice.edu/corporate-partners" }, { label: "Rice University CERAWeek AI Workforce Commentary", url: "https://news.rice.edu/news/2025/rice-university-ceraweek-2025" }] },
+  { name: "Purdue University", grade: "D", gradeClass: "grade-D", pillClass: "pill-undisclosed", pillLabel: "undisclosed", finding: "Purdue's Institute for Physical Artificial Intelligence (IPAI) explicitly lists Defense as one of its core research pillars, steering machine learning toward military and security frameworks. Beyond research, Purdue launched its Defense Innovation Initiative, an engineering program explicitly mandated to accelerate the commercialization of defense-tech patents, create pipelines for defense workforce development, and fast-track autonomous and military-adjacent software systems into the marketplace. Purdue does not publish itemized endowment holdings.", disclosureNote: "Purdue does not publish itemized endowment holdings. AI exposure through the endowment's alternatives and private equity positions is not disclosed.", sources: [{ label: "Purdue IPAI Core Research Thrusts", url: "https://www.purdue.edu/ipai/research/index.html" }, { label: "Purdue Engineering Defense Innovation and Tech Commercialization Accelerator", url: "https://engineering.purdue.edu/Engr/Research/DefenseInitiative" }] },
+  { name: "Northeastern University", grade: "D", gradeClass: "grade-D", pillClass: "pill-undisclosed", pillLabel: "undisclosed", finding: "Northeastern has built a global network dedicated to commercializing AI for corporate partners. The Roux Institute and the Institute for Experiential AI operate together to turn machine learning research into commercial products and competitive advantages for private companies. Northeastern's Silicon Valley, Toronto, and Vancouver campuses are structurally co-located with tech monopolies like Amazon and Microsoft and maintain over 50 industry partnerships. These are relationships that are mostly structural and programmatic. In the Roux model, companies pay the university for applied R&D, and students are compensated for corporate work through co-op arrangements. Northeastern does not publish itemized endowment holdings.", disclosureNote: "Northeastern does not publish itemized endowment holdings. AI exposure through the endowment's alternatives and private equity positions is not disclosed.", sources: [{ label: "Northeastern Roux Institute Corporate Applied Research", url: "https://roux.northeastern.edu/work/" }, { label: "Northeastern Global Campus Tech Integration and Co-Location", url: "https://www.northeastern.edu/experiential-ai/" }] },
+  { name: "Georgetown University", grade: "D", gradeClass: "grade-D", pillClass: "pill-undisclosed", pillLabel: "undisclosed", finding: "Georgetown houses the Center for Security and Emerging Technology (CSET) within its Walsh School of Foreign Service. CSET is a research center focused on analyzing and advising on U.S. policy around AI and national security, including military AI applications. Georgetown's infrastructure contributes to policy discussions on how the U.S. government integrates machine learning into defense and security contexts. Georgetown does not publish itemized endowment holdings.", disclosureNote: "Georgetown does not publish itemized endowment holdings. AI exposure through the endowment's alternatives and private equity positions is not disclosed.", sources: [{ label: "Georgetown CSET Defense and Military AI Policy Research", url: "https://cset.georgetown.edu/research/defense/" }] },
+  { name: "Penn State University", grade: "D", gradeClass: "grade-D", pillClass: "pill-undisclosed", pillLabel: "undisclosed", finding: "Penn State operates on two fronts. The Center for Artificial Intelligence Foundations and Engineered Systems (CAFE) explicitly mandates its research toward accelerating machine learning applications for defense systems. On the corporate side, the Applications of AI and Machine Learning to Industry (AIMI) center acts as an open consultancy pool connecting large corporations and SMEs directly to university infrastructure to automate production, manufacturing, and operational workflows. Additionally, Penn State recently deployed its AI Studio enterprise network to embed generative automation directly into institutional workflows. Penn State does not publish itemized endowment holdings.", disclosureNote: "Penn State does not publish itemized endowment holdings. AI exposure through the endowment's alternatives and private equity positions is not disclosed.", sources: [{ label: "Penn State ICDS CAFE and AIMI Frameworks", url: "https://www.icds.psu.edu/research/ai/" }, { label: "Penn State Enterprise Generative AI Studio", url: "https://www.psu.edu/news/research/story/penn-state-launches-ai-studio/" }] },
+  {
+    name: "Duke University",
+    grade: "D",
+    gradeClass: "grade-D",
+    pillClass: "pill-undisclosed",
+    pillLabel: "undisclosed",
+    finding: "Duke is one of only 15 institutions worldwide selected as a founding member of OpenAI's NextGenAI consortium (March 2025). Duke's membership deepens the financial and research entanglement between the institution and the leading commercial AI company. Duke's endowment AI holdings are not publicly disclosed.",
+    disclosureNote: "Duke does not publish itemized endowment holdings. AI exposure through the endowment's VC and private equity fund positions is not disclosed.",
+    sources: [
+      { label: "GovTech — OpenAI NextGenAI consortium", url: "https://www.govtech.com/education/higher-ed/openai-announces-nextgenai-higher-ed-consortium" }
+    ]
+  },
+  {
+    name: "UCLA",
+    grade: "D",
+    gradeClass: "grade-D",
+    pillClass: "pill-verified",
+    pillLabel: "confirmed",
+    finding: "In September 2024, UCLA became the first California university to formally adopt ChatGPT Enterprise via an agreement with OpenAI, making the tool available across research, teaching, and administration — though the rollout was not made campus-wide. UCLA ran 68 AI pilot projects across 20 departments powered by OpenAI tools. No dollar figure for the OpenAI agreement was publicly disclosed. The UC system publishes its endowment holdings at a high level but does not itemize specific AI company exposure within its VC/PE fund positions.",
+    disclosureNote: "The UC system publicizes its endowment holdings at a high level, but does not itemize specific AI company exposure within VC/PE fund positions. A granular, fund-by-fund breakdown of AI company exposure within the endowment is not made available.",
+    sources: [
+      { label: "EdScoop — UCLA ChatGPT Enterprise agreement", url: "https://edscoop.com/ucla-unveils-university-wide-chatgpt-plans/" },
+      { label: "UCLA Newsroom — AI pilot projects summary", url: "https://newsroom.ucla.edu/stories/ucla-ai-pilot-project-sparks-innovation-strategy" }
+    ]
+  },
+  {
+    name: "Ohio State University",
+    grade: "D",
+    gradeClass: "grade-D",
+    pillClass: "pill-undisclosed",
+    pillLabel: "undisclosed",
+    finding: "Ohio State is one of only 15 founding members of OpenAI's NextGenAI consortium (March 2025). Ohio State's focus within the consortium spans 'digital health and therapeutics,' manufacturing, energy, mobility, and agriculture, meaning OpenAI's commercial AI tools are being integrated into research across a wide range of sectors. Ohio State's endowment has undisclosed AI exposure through VC/PE alternatives.",
+    disclosureNote: "Ohio State does not publish itemized endowment holdings. AI exposure through the endowment's alternatives and private equity positions is not disclosed.",
+    sources: [
+      { label: "AAU — OpenAI NextGenAI consortium members", url: "https://www.aau.edu/newsroom/leading-research-universities-report/openai-partners-aau-members-and-other-research" }
+    ]
+  },
+  {
+    name: "Texas A&M University",
+    grade: "D",
+    gradeClass: "grade-D",
+    pillClass: "pill-verified",
+    pillLabel: "confirmed",
+    finding: "Texas A&M is a founding member of OpenAI's NextGenAI consortium (March 2025). Texas A&M is using NextGenAI funding to expand its 'Generative AI Literacy Initiative,' meaning OpenAI is funding and shaping how tens of thousands of students at a flagship public university understand, interact with, and evaluate AI technology. Texas A&M's endowment is partially disclosed through UTIMCO (University of Texas Investment Management Company), the shared investment arm managing approximately $44 billion across the UT and Texas A&M systems. UTIMCO has disclosed venture positions in Thrive Capital, Sequoia, and Notable Capital.",
+    disclosureNote: "Texas A&M's endowment is partially disclosed through UTIMCO (University of Texas Investment Management Company), the investment arm managing approximately $44 billion across the UT and Texas A&M systems. UTIMCO has disclosed venture positions in Thrive Capital, Sequoia, and Notable Capital. Specific AI exposure within individual fund positions is not itemized.",
+    sources: [
+      { label: "Insight Into Academia — NextGenAI member institutions", url: "https://insightintoacademia.com/openai-launches-50m-research-consortium-with-university-partners/" }
+    ]
+  },
+  {
+    name: "University of Georgia",
+    grade: "D",
+    gradeClass: "grade-D",
+    pillClass: "pill-undisclosed",
+    pillLabel: "undisclosed",
+    finding: "UGA joined the OpenAI NextGenAI consortium (March 2025), one of only 15 founding institutions worldwide. OpenAI is integrating its tools into UGA curricula and research. This gives a private corporation with a $300B+ valuation a formal foothold in academic programming at a flagship public institution.",
+    disclosureNote: "UGA does not publish itemized endowment holdings. AI exposure through the endowment's alternatives and private equity positions is not disclosed.",
+    sources: [
+      { label: "UGA Computer Science — NextGenAI announcement", url: "https://cs.uga.edu/news/stories/2025/uga-joins-nextgenai-consortium-accelerate-ai-innovation-education" }
+    ]
+  },
+  {
+    name: "Howard University",
+    grade: "D",
+    gradeClass: "grade-D",
+    pillClass: "pill-undisclosed",
+    pillLabel: "undisclosed",
+    finding: "Howard University, the nation's most prominent HBCU, joined OpenAI's NextGenAI consortium (March 2025). Howard is using NextGenAI funding to integrate AI into curricula and teaching methods. A private company valued at over $300B now has a formal presence shaping educational priorities and methodology at the institution most central to Black academic achievement in the United States.",
+    disclosureNote: "Howard does not publish itemized endowment holdings. AI exposure through the endowment's alternatives and private equity positions is not disclosed.",
+    sources: [
+      { label: "Insight Into Academia — NextGenAI members and plans", url: "https://insightintoacademia.com/openai-launches-50m-research-consortium-with-university-partners/" }
+    ]
+  },
+  {
+    name: "California Institute of Technology (Caltech)",
+    grade: "D",
+    gradeClass: "grade-D",
+    pillClass: "pill-undisclosed",
+    pillLabel: "undisclosed",
+    finding: "Caltech is a founding member of OpenAI's NextGenAI consortium (March 2025), one of only 15 institutions worldwide. As one of the most elite technical institutes in the world, Caltech's inclusion provides OpenAI significant academic credibility and research access. Caltech also maintains partnerships with JPL for AI research. Caltech's small endowment (~$4B) has undisclosed AI exposure.",
+    disclosureNote: "Caltech does not publish itemized endowment holdings. AI exposure through the endowment's alternatives and private equity positions is not disclosed.",
+    sources: [
+      { label: "AIBusiness — OpenAI NextGenAI consortium", url: "https://aibusiness.com/nlp/openai-launches-50m-consortium-brings-ai-to-education" }
+    ]
+  },
+  {
+    name: "Vanderbilt University",
+    grade: "D",
+    gradeClass: "grade-D",
+    pillClass: "pill-undisclosed",
+    pillLabel: "undisclosed",
+    finding: "Vanderbilt launched the Amplify GenAI Innovation Center (February 2026), deploying ChatGPT Edu (OpenAI), Amplify 2.0 (powered by AWS), and Grow with Google to all faculty, students and staff. The Amplify platform, developed at Vanderbilt, has been licensed by 50+ universities, creating a commercial AI platform business operating within an academic institution. In May 2024, Vanderbilt partnered with the Oak Ridge National Laboratory to build AI assurance models for national security missions, optimizing autonomous decision-making in contested combat environments. Vanderbilt's endowment (~$10.7B) has undisclosed AI exposure.",
+    disclosureNote: "Vanderbilt does not publish itemized endowment holdings. AI exposure through the endowment's alternatives and private equity positions is not disclosed.",
+    sources: [
+      { label: "Vanderbilt News — Amplify GenAI Innovation Center launch", url: "https://news.vanderbilt.edu/2026/02/02/vanderbilt-launches-amplify-generative-ai-innovation-center-within-college-of-connected-computing/" },
+      { label: "Vanderbilt News — Multi-tool AI strategy expansion", url: "https://news.vanderbilt.edu/2026/01/12/vanderbilt-expands-multi-tool-ai-strategy-with-chatgpt-edu-amplify-2-0-and-more/" }
+    ]
+  },
+  { name: "UC Irvine", grade: "D", gradeClass: "grade-D", pillClass: "pill-verified", pillLabel: "confirmed", finding: "UC Irvine has layered multiple industry AI entanglements across its campus. In March 2025, SAP SE (the world's largest enterprise software and business AI company) donated $2 million to establish the Hasso Plattner Endowed Chair in Artificial Intelligence in UCI's Donald Bren School of Information & Computer Sciences. The chair explicitly supports industry collaboration and was named after SAP's co-founder. UCI has also established the AI Institute for Science (AISI) as a campus-wide AI research hub, featuring a growing portfolio of industry research partnerships. Additionally, UCI launched a new Master of Applied Artificial Intelligence for Science degree in 2025. It is explicitly structured around industry-relevant AI skills with corporate partnership pipelines built into the program. The UC system publishes its endowment holdings at a high level, however, it does not itemize specific AI company exposure within VC/PE fund positions.", disclosureNote: "The UC system publicizes its endowment holdings at a high level, but does not itemize specific AI company exposure within VC/PE fund positions. A granular, fund-by-fund breakdown of AI company exposure within the endowment is not made available.", sources: [
+    { label: "UCI News — SAP $2M gift establishes Hasso Plattner Endowed Chair in AI", url: "https://news.uci.edu/2025/03/13/donation-from-sap-establishes-new-uc-irvine-endowed-chair-in-artificial-intelligence/" },
+    { label: "UCI OIT — AI Partnerships: Microsoft Copilot, Google Gemini, Zoom AI", url: "https://zotgpt-lb.zot-gpt-prod.aws.uci.edu/partners" },
+    { label: "UCI AISI — AI Institute for Science", url: "https://ai-science.uci.edu/" },
+    { label: "UCI News — Master of Applied AI for Science launch", url: "https://news.uci.edu/2025/10/03/uc-irvine-launches-masters-program-in-applied-artificial-intelligence-for-science/" },
+    { label: "UC Investments — Annual Report 2024-25: AI as top driver of endowment returns", url: "https://www.ucop.edu/investment-office/index.html" }
+  ] },
+  { name: "UC Santa Cruz", grade: "D", gradeClass: "grade-D", pillClass: "pill-verified", pillLabel: "confirmed", finding: "UC Santa Cruz previously established a Generative AI Center positioned as a bridge between academia and industry. The center's stated mission includes \"collaboration and accessible ecosystem: building an open and inclusive AI ecosystem where academia, industry, and the broader community meet and collaborate,\" and its events have brought together AI builders, investors, and researchers from the private sector. The GenAI Center's graduate program, named the Accelerate to Industry (A2i) initiative, is funded in part through a partnership with NVIDIA. It connects PhD students and postdocs directly to industry employment pipelines. The center also hosted an \"AI Frontier: Data, Agents & Robots\" event that drew over 200 AI industry participants, investors, and researchers. UCSC describes its position as \"in the heart of Silicon Valley\" and explicitly leverages that proximity to structure industry collaboration. The UC system publishes its endowment holdings at a high level but does not itemize specific AI company exposure within VC/PE fund positions.", disclosureNote: "The UC system publicizes its endowment holdings at a high level, but does not itemize specific AI company exposure within VC/PE fund positions. A granular, fund-by-fund breakdown of AI company exposure within the endowment is not made available.", sources: [
+    { label: "UC Santa Cruz — Generative AI Center: mission and industry collaboration", url: "https://genai.ucsc.edu/about/" },
+    { label: "UC Santa Cruz — A2i: NVIDIA-partnered industry pipeline for PhD students", url: "https://www.ucsc.edu/annual-report/leading-the-change-2025/" },
+    { label: "UC Santa Cruz News — Shaping the future of AI", url: "https://news.ucsc.edu/2026/01/shaping-the-future-of-artificial-intelligence/" },
+    { label: "UC Investments — Annual Report 2024-25: AI as top driver of endowment returns", url: "https://www.ucop.edu/investment-office/index.html" }
+  ] },
+  { name: "UC Davis", grade: "D", gradeClass: "grade-D", pillClass: "pill-undisclosed", pillLabel: "undisclosed", finding: "UC Davis operates the Center for AI, Robotics, and Edge Computing with active industry research partnerships. No standalone AI investment dollar figure is publicly disclosed. The UC system publicizes its endowment holdings at a high level, but does not itemize specific AI company exposure within VC/PE fund positions.", disclosureNote: "The UC system publicizes its endowment holdings at a high level, but does not itemize specific AI company exposure within VC/PE fund positions.", sources: [] },
+  { name: "UC Santa Barbara", grade: "D", gradeClass: "grade-D", pillClass: "pill-verified", pillLabel: "confirmed", finding: "UCSB has active AI research programs with industry funding that is not always disclosed. No standalone AI investment figure is publicly announced. The UC system publicizes its endowment holdings at a high level, but does not itemize specific AI company exposure within VC/PE fund positions.", disclosureNote: "The UC system publicizes its endowment holdings at a high level, but does not itemize specific AI company exposure within VC/PE fund positions. A granular, fund-by-fund breakdown of AI company exposure within the endowment is not made available.", sources: [] },
+  { name: "New York University", grade: "C", gradeClass: "grade-C", pillClass: "pill-undisclosed", pillLabel: "undisclosed", finding: "NYU is a collaborator for international AI ventures and offers workforce training for the evolving AI landscape. The NYU Global AI Frontier Lab was established through a multi-million dollar partnership with South Korea's Ministry of Science and ICT, and contains the AI Innovation Accelerator (AIIA) Program. This eight-week program is led by the NYU Stern School of Business and brings post-Series A South Korean AI startups onto campus to refine market entry strategies. These companies cover varied commercial sectors, but the lab's academic research focuses on fundamental AI, trustworthy and responsible AI, and AI applications in healthcare and medicine. Separately, the NYU School of Professional Studies offers professional certificate programs that train workers to integrate automated AI workflows into their current practices. These programs emphasize human-AI collaboration with human oversight and ethical guidelines. NYU does not publish itemized endowment holdings.", disclosureNote: "NYU does not publish itemized endowment holdings. AI exposure through the endowment's alternatives and private equity positions is not disclosed.", sources: [{ label: "NYU Global AI Frontier Lab Innovation Accelerator Partners", url: "https://globalai.nyu.edu/innovation-accelerator/" }, { label: "NYU School of Professional Studies Advanced AI and Automation Workflows", url: "https://www.sps.nyu.edu/homepage/academics/masters-degrees/ms-in-management-and-systems/curriculum/advanced-ai-communications.html" }] },
+  {
+    name: "Georgia Tech",
+    grade: "C",
+    gradeClass: "grade-C",
+    pillClass: "pill-undisclosed",
+    pillLabel: "undisclosed",
+    finding: "In March 2025, Georgia Tech launched 'Tech AI,' a formal initiative to commercialize AI research for industry and government, explicitly including national security applications. In July 2025, Georgia Tech announced participation in the $20M national AI supercomputer ('Nexus'), funded by a grant from the U.S. National Science Foundation, in partnership with UIUC. The Nexus supercomputer is overwhelmingly oriented toward academic users, though limited industry access is possible. Georgia Tech explicitly frames its AI research as serving government and defense agencies, and its NSF-funded AI institutes actively partner with defense contractors and government agencies.",
+    disclosureNote: "Georgia Tech does not publish itemized endowment holdings. AI exposure through the endowment's alternatives and private equity positions is not disclosed.",
+    sources: [
+      { label: "Georgia Tech News — Tech AI launch", url: "https://news.gatech.edu/news/2025/03/24/georgia-tech-launches-tech-ai-accelerate-real-world-impact-artificial-intelligence" },
+      { label: "Georgia Tech News — $20M Nexus supercomputer", url: "https://news.gatech.edu/news/2025/07/15/georgia-tech-build-20m-national-ai-supercomputer" }
+    ]
+  },
+  { name: "Boston University", grade: "C", gradeClass: "grade-C", pillClass: "pill-undisclosed", pillLabel: "undisclosed", finding: "BU's Questrom School of Business launched an Online Master of Science in AI in Business explicitly aimed at mid-career corporate professionals. The program's stated learning outcomes train professionals to redesign end-to-end workflows for human-AI collaboration and augmentation, and to move from AI pilots to full enterprise scale. This is a structured curriculum for teaching corporations how to systematically replace back-office, operational, and management workflows with automated systems. BU does not publish itemized endowment holdings.", disclosureNote: "BU does not publish itemized endowment holdings. AI exposure through the endowment's alternatives and private equity positions is not disclosed.", sources: [{ label: "BU Questrom Online MS in AI in Business Curriculum", url: "https://questromworld.bu.edu/msaib/" }, { label: "Poets and Quants BU Launches Business-Driven AI Degree", url: "https://poetsandquants.com/2024/03/07/boston-university-launches-new-ai-in-business-masters/" }] },
+  { name: "UNC Chapel Hill", grade: "C", gradeClass: "grade-C", pillClass: "pill-undisclosed", pillLabel: "undisclosed", finding: "UNC has built a Microsoft-centered AI infrastructure. Azure is described by UNC as the primary computing resource for research across all disciplines, and Microsoft Copilot is deployed to every student, faculty, and staff member. OpenAI GPT-4 API keys were distributed through an AI Acceleration Program in spring 2025. UNC faculty have co-developed an AI system with Microsoft Research, and UNC was featured in a Microsoft-sponsored IDC white paper on AI adoption. The $12.2B UNC Investment Fund allocates 32.4% to private equity, a category that at this size almost certainly includes AI exposure. However, specific holdings are not disclosed.", disclosureNote: "UNC does not publish itemized endowment holdings. AI exposure through VC and private equity fund positions within the endowment is not disclosed.", sources: [
+    { label: "UNC Research — AI at Carolina: Microsoft Azure as primary research infrastructure", url: "https://research.unc.edu/ai/" },
+    { label: "UNC ITS — Microsoft Copilot campus-wide deployment", url: "https://its.unc.edu/ai/copilot/" },
+    { label: "UNC ITS — AI Acceleration Program: OpenAI API keys in coursework", url: "https://its.unc.edu/2025/09/24/teaching-on-the-frontier-microsoft-azure-and-openai/" },
+    { label: "Hedgeweek — UNC Investment Fund 11.6% return, 32.4% private equity allocation", url: "https://www.hedgeweek.com/unc-endowment-posts-strong-returns-driven-by-hedge-fund-strategies/" }
+  ] },
+  { name: "Auburn University", grade: "C", gradeClass: "grade-C", pillClass: "pill-moderate", pillLabel: "undisclosed", finding: "Auburn University has built a formal, Microsoft-centered AI infrastructure. Microsoft featured Auburn as a customer story in 2024 and documented how the university integrated Microsoft Copilot across their campus. Auburn's Biggio Center developed a 'Teaching with AI' course in partnership with the Southeastern Conference AI Consortium, and it has since reached more than 10,000 faculty at over 90 institutions. This extends Auburn's AI curriculum well beyond its own campus. The university has also launched AI@AU, a $2 million provost-funded initiative to build computational AI infrastructure and coordinate university-wide AI research. Auburn's endowment AI exposure through private equity and alternatives is not disclosed.", disclosureNote: "Auburn does not publish itemized endowment holdings. AI exposure through the endowment's alternatives and private equity positions is not disclosed.", sources: [
+    { label: "Microsoft — Auburn University customer story: Copilot campus deployment", url: "https://www.microsoft.com/en/customers/story/1792296600814885165-auburn-microsoft-sentinel-higher-education-en-united-states" },
+    { label: "Auburn Wire — Microsoft case study on AI efforts", url: "https://wire.auburn.edu/content/provost/2024/08/011121-Microsoft-Case-Study-AI.php" },
+    { label: "Auburn Wire — Copilot licenses expanded to 1,000 employees", url: "https://wire.auburn.edu/content/announcements/2024/12/11165309-announcement.php" },
+    { label: "Auburn Engineering — $2M AI@AU initiative launch", url: "https://eng.auburn.edu/news/2022/03/artificial-intelligence-initiative-emboldens-auburns-position-as-leader-in-innovation" },
+    { label: "Microsoft Education Blog — Auburn featured in AI-ready campus white paper", url: "https://www.microsoft.com/en-us/education/blog/2025/06/ai-strategies-from-the-frontlines-of-higher-education/" }
+  ] },
+  { name: "George Mason University", grade: "C", gradeClass: "grade-C", pillClass: "pill-moderate", pillLabel: "undisclosed", finding: "George Mason has pursued AI integration across commercial, academic, and defense sectors. In 2025, Mason launched PatriotAI, an enterprise AI platform described by the university as \"the first major outcome\" of a formal strategic partnership with Microsoft and Cloudforce. PatriotAI deploys six specialized AI agents to all students, faculty, and staff, with Microsoft-supported training programs across campus. Mason has a separate formal partnership with Amazon Web Services for cloud computing, certifications, and research infrastructure. In the defense sector, Mason has secured a Department of Defense contract in 2024 to convene the first-ever academic workshop on Integrated Sensing and Communications (ISAC), a named Pentagon priority. In 2025, a ISAC Strategy Summit at Mason drew 300 participants including corporate partners such as Lockheed Martin, Nokia, AT&T, and Ericsson. In 2024, Mason appointed a Chief Artificial Intelligence Officer to lead AI integration across research, academics, and partnerships. This is the first such role at a Virginia public university. Mason's endowment AI exposure through private equity and alternatives is not disclosed.", disclosureNote: "George Mason does not publish itemized endowment holdings. AI exposure through the endowment's alternatives and private equity positions is not disclosed.", sources: [
+    { label: "George Mason — PatriotAI launch announcement", url: "https://president.gmu.edu/news/2025-06/introducing-patriotai-george-masons-new-enterprise-ai-platform" },
+    { label: "George Mason — Powering Artificial Intelligence: Microsoft, Amazon AWS partnerships", url: "https://www.gmu.edu/AI" },
+    { label: "George Mason — Defense and security research: Pentagon, Lockheed Martin, Golden Dome", url: "https://www.gmu.edu/news/2026-03/front-lines-defense-and-security-research" },
+    { label: "George Mason — ISAC Strategy Summit: Nokia, AT&T, Ericsson, Lockheed Martin", url: "https://www.gmu.edu/news/2025-09/george-mason-faculty-drive-national-momentum-defense-and-security-research" },
+    { label: "George Mason — Inaugural Chief AI Officer appointment", url: "https://about.gmu.edu/news/2022-11/mason-amazon-collaboration-deliver-innovations-education-and-research" }
+  ] },
+  {
+    name: "University of Pennsylvania",
+    grade: "C",
+    gradeClass: "grade-C",
+    pillClass: "pill-undisclosed",
+    pillLabel: "undisclosed",
+    finding: "Penn's $24.8B endowment returned 12.2% in FY2025, significantly above peer median. Penn's Wharton School simultaneously produces research on AI's labor market displacement. Penn does not disclose itemized endowment holdings. The financial terms of any AI company investments remain completely unknown to students and the public.",
+    disclosureNote: "Penn does not publish itemized endowment holdings. The university has not disclosed AI exposure through VC and private equity fund positions. Independent MPI factor analysis suspects AI exposure within the endowment portfolio based on return patterns.",
+    sources: [
+      { label: "Chief Investment Officer — Penn endowment 12.2% FY2025", url: "https://www.ai-cio.com/news/university-of-pennsylvania-endowment-returned-12-2-in-fiscal-2025/" },
+    ]
+  },
+  {
+    name: "Columbia University",
+    grade: "C",
+    gradeClass: "grade-C",
+    pillClass: "pill-undisclosed",
+    pillLabel: "undisclosed",
+    finding: "Columbia's $14.3B endowment returned 12.4% in FY2025, above peer median. Columbia does not disclose itemized endowment holdings. Columbia Business School researchers have publicly analyzed AI investment bubble risks and the interconnected dependencies between Microsoft, NVIDIA, OpenAI, and CoreWeave, while Columbia's own endowment almost certainly holds AI-correlated assets through VC/PE alternatives.",
+    disclosureNote: "Columbia does not publish itemized endowment holdings. AI exposure through the endowment's VC and private equity positions is not disclosed.",
+    sources: [
+      { label: "Global Finance — AI financial circle game (Columbia CBS reference)", url: "https://gfmag.com/technology/the-circle-game/" }
+    ]
+  },
+  {
+    name: "Northwestern University",
+    grade: "C",
+    gradeClass: "grade-C",
+    pillClass: "pill-undisclosed",
+    pillLabel: "undisclosed",
+    finding: "Northwestern previously authorized a massive, multi-departmental financial and operational rollout to launch the Northwestern Network for Collaborative Intelligence (NNCI). This is a standalone, university-wide network created to serve as a central hub funding AI research, academic curriculum expansion, and high-performance computing infrastructure. Northwestern is also the host of multiple AI research centers, including the Center for Deep Learning, the Initiative for Artificial Intelligence + Innovation, and the Northwestern Institute on Complex Systems. Northwestern's $14.7B endowment (FY2024) has undisclosed AI exposure, and the university cannot prove it is not profiting from the AI industry displacing its graduates.",
+    disclosureNote: "Northwestern does not publish itemized endowment holdings. AI exposure through the endowment's alternatives and private equity positions is not disclosed.",
+    sources: [
+      { label: "Northwestern University — Research overview", url: "https://www.northwestern.edu/research/" },
+      { label: "Northwestern — NNCI launch announcement", url: "https://www.northwestern.edu/provost/" }
+    ]
+  },
+  {
+    name: "University of Chicago",
+    grade: "C",
+    gradeClass: "grade-C",
+    pillClass: "pill-undisclosed",
+    pillLabel: "undisclosed",
+    finding: "UChicago's ~$9.6B endowment has AI exposure via VC/PE, confirmed by independent analysis. UChicago hosts the Toyota Technological Institute at Chicago (TTIC), a private AI research institute. UChicago has multiple private industry AI research partnerships with undisclosed financial terms. The university does not disclose itemized endowment holdings.",
+    disclosureNote: "UChicago does not publish itemized endowment holdings. The university has not disclosed AI exposure through VC and private equity fund positions. Independent MPI factor analysis suspects AI exposure within the endowment portfolio based on return patterns.",
+    sources: [
+      { label: "MPI — FY25 endowment AI analysis", url: "https://www.markovprocesses.com/blog/fy25-endowments-ai-and-crypto-to-the-moon/" }
+    ]
+  },
+  {
+    name: "Dartmouth College",
+    grade: "C",
+    gradeClass: "grade-C",
+    pillClass: "pill-undisclosed",
+    pillLabel: "undisclosed",
+    finding: "Dartmouth hosted the 1956 Dartmouth Summer Research Project on Artificial Intelligence, the conference that coined the term 'AI.' The institution that named the technology likely holds AI-correlated assets through its endowment, though specific holdings remain undisclosed.",
+    disclosureNote: "Dartmouth does not publish itemized endowment holdings. The university has not disclosed AI exposure through VC and private equity fund positions. Independent MPI factor analysis suspects AI exposure within the endowment portfolio based on return patterns.",
+    sources: [
+    ]
+  },
+  {
+    name: "Brown University",
+    grade: "C",
+    gradeClass: "grade-C",
+    pillClass: "pill-undisclosed",
+    pillLabel: "undisclosed",
+    finding: "In July 2025, Brown was subpoenaed by the House Judiciary Committee as part of an antitrust investigation into Ivy League financial aid practices, adding to the scrutiny of Brown's financial operations. Brown does not publish itemized endowment holdings.",
+    disclosureNote: "Brown does not publish itemized endowment holdings. The university has not disclosed AI exposure through VC and private equity fund positions. Independent MPI factor analysis suspects AI exposure within the endowment portfolio based on return patterns.",
+    sources: [
+      { label: "CNBC — Brown University Congressional subpoena", url: "https://www.cnbc.com/2025/07/01/jim-jordan-subpoena-brown-penn-harvard.html" },
+    ]
+  },
+  { name: "University of Alabama", grade: "X", gradeClass: "grade-X", pillClass: "pill-undisclosed", pillLabel: "undisclosed", finding: "The UA System endowment — valued at $2.59 billion as of 2025 — has set a target allocation of 28% to private equity. As of January 2024, meeting that target requires approximately $120 to $140 million in new private equity commitments annually through 2029. At this pace and fund size, AI company exposure through those PE fund positions is a near-certainty — but the university discloses no itemized holdings. UA does not publish the specific fund managers or portfolio companies within its alternatives allocation.", disclosureNote: "UA does not publish itemized endowment holdings. AI exposure through the endowment's private equity fund positions — targeting 28% allocation — is not disclosed.", sources: [
+    { label: "Dakota — UA System endowment targeting 28% private equity, $120–140M/yr commitments", url: "https://www.dakota.com/fundraising-news/university-of-alabama-targeting-up-to-140m-to-private-equity-in-2024" }
+  ] },
+  { name: "University of Virginia", grade: "X", gradeClass: "grade-X", pillClass: "pill-undisclosed", pillLabel: "undisclosed", finding: "UVA's $16B endowment, managed by UVIMCO, has undisclosed AI exposure through the alternative investments category. At this endowment size, AI company exposure through VC/PE funds is virtually certain. UVA does not publish itemized holdings. Any AI programs or affiliations that do exist were not found to be significant enough to warrant a higher exposure rating.", disclosureNote: "UVIMCO does not publish itemized endowment holdings. AI exposure through the endowment's VC and private equity positions is not disclosed.", sources: [{ label: "UVIMCO — Investment office", url: "https://uvimco.org" }] },
+  { name: "Michigan State University", grade: "X", gradeClass: "grade-X", pillClass: "pill-undisclosed", pillLabel: "undisclosed", finding: "MSU has AI research with undisclosed industry funding. No major standalone AI investment is publicly announced. MSU does not publish itemized endowment holdings. Any AI programs or affiliations that do exist were not found to be significant enough to warrant a higher exposure rating.", disclosureNote: "Michigan State does not publish itemized endowment holdings. AI exposure through the endowment's alternatives and private equity positions is not disclosed.", sources: [] },
+  { name: "University of Wisconsin-Madison", grade: "X", gradeClass: "grade-X", pillClass: "pill-undisclosed", pillLabel: "undisclosed", finding: "UW-Madison has AI research centers with undisclosed industry funding. No major standalone AI investment is publicly announced. UW-Madison does not publish itemized endowment holdings. Any AI programs or affiliations that do exist were not found to be significant enough to warrant a higher exposure rating.", disclosureNote: "UW-Madison does not publish itemized endowment holdings. AI exposure through the endowment's alternatives and private equity positions is not disclosed.", sources: [] },
+  { name: "University of Minnesota", grade: "X", gradeClass: "grade-X", pillClass: "pill-undisclosed", pillLabel: "undisclosed", finding: "UMN has AI research including a Medical AI Institute. No major standalone AI investment is publicly announced. UMN does not publish itemized endowment holdings. Any AI programs or affiliations that do exist were not found to be significant enough to warrant a higher exposure rating.", disclosureNote: "Minnesota does not publish itemized endowment holdings. AI exposure through the endowment's alternatives and private equity positions is not disclosed.", sources: [] },
+  { name: "Indiana University", grade: "X", gradeClass: "grade-X", pillClass: "pill-undisclosed", pillLabel: "undisclosed", finding: "IU AI research is growing with undisclosed industry funding. No major standalone AI investment is announced. IU does not publish itemized endowment holdings. Any AI programs or affiliations that do exist were not found to be significant enough to warrant a higher exposure rating.", disclosureNote: "Indiana does not publish itemized endowment holdings. AI exposure through the endowment's alternatives and private equity positions is not disclosed.", sources: [] },
+  { name: "University of Maryland", grade: "X", gradeClass: "grade-X", pillClass: "pill-undisclosed", pillLabel: "undisclosed", finding: "UMD hosts the Maryland AI Initiative with NSF and DARPA funding — government bodies tied to defense AI research. No aggregated standalone AI investment dollar is disclosed. UMD does not publish itemized endowment holdings. Any AI programs or affiliations that do exist were not found to be significant enough to warrant a higher exposure rating.", disclosureNote: "Maryland does not publish itemized endowment holdings. AI exposure through the endowment's alternatives and private equity positions is not disclosed.", sources: [{ label: "UMD — Maryland AI Initiative", url: "https://ai.umd.edu" }] },
+  { name: "University of Pittsburgh", grade: "X", gradeClass: "grade-X", pillClass: "pill-undisclosed", pillLabel: "undisclosed", finding: "Pitt has significant AI research especially in medical AI. No major standalone investment is announced. Pitt does not publish itemized endowment holdings. Any AI programs or affiliations that do exist were not found to be significant enough to warrant a higher exposure rating.", disclosureNote: "Pitt does not publish itemized endowment holdings. AI exposure through the endowment's alternatives and private equity positions is not disclosed.", sources: [] },
+  { name: "Arizona State University", grade: "X", gradeClass: "grade-X", pillClass: "pill-undisclosed", pillLabel: "undisclosed", finding: "ASU is a major AI education institution with multiple industry partnerships. No major standalone investment is publicly announced. ASU does not publish itemized endowment holdings. Any AI programs or affiliations that do exist were not found to be significant enough to warrant a higher exposure rating.", disclosureNote: "ASU does not publish itemized endowment holdings. AI exposure through the endowment's alternatives and private equity positions is not disclosed.", sources: [] },
+  { name: "University of Colorado Boulder", grade: "X", gradeClass: "grade-X", pillClass: "pill-undisclosed", pillLabel: "undisclosed", finding: "CU Boulder has AI research with undisclosed industry funding. No major standalone investment is announced. CU Boulder does not publish itemized endowment holdings. Any AI programs or affiliations that do exist were not found to be significant enough to warrant a higher exposure rating.", disclosureNote: "CU Boulder does not publish itemized endowment holdings. AI exposure through the endowment's alternatives and private equity positions is not disclosed.", sources: [] },
+  { name: "Emory University", grade: "X", gradeClass: "grade-X", pillClass: "pill-undisclosed", pillLabel: "undisclosed", finding: "Emory has AI research especially in health AI. No major standalone investment is announced. Emory does not publish itemized endowment holdings. Any AI programs or affiliations that do exist were not found to be significant enough to warrant a higher exposure rating.", disclosureNote: "Emory does not publish itemized endowment holdings. AI exposure through the endowment's alternatives and private equity positions is not disclosed.", sources: [] },
+  { name: "Washington University in St. Louis", grade: "X", gradeClass: "grade-X", pillClass: "pill-undisclosed", pillLabel: "undisclosed", finding: "WashU has AI research and a $14.8B endowment. At this size, AI company exposure through VC/PE funds is virtually certain. No major standalone AI investment is announced. WashU does not publish itemized endowment holdings. Any AI programs or affiliations that do exist were not found to be significant enough to warrant a higher exposure rating.", disclosureNote: "WashU does not publish itemized endowment holdings. AI exposure through the endowment's alternatives and private equity positions is not disclosed.", sources: [] },
+  { name: "Tufts University", grade: "X", gradeClass: "grade-X", pillClass: "pill-undisclosed", pillLabel: "undisclosed", finding: "Tufts has growing AI programs. No major standalone AI investment is announced. Tufts does not publish itemized endowment holdings. Any AI programs or affiliations that do exist were not found to be significant enough to warrant a higher exposure rating.", disclosureNote: "Tufts does not publish itemized endowment holdings. AI exposure through the endowment's alternatives and private equity positions is not disclosed.", sources: [] },
+  { name: "University of Notre Dame", grade: "X", gradeClass: "grade-X", pillClass: "pill-undisclosed", pillLabel: "undisclosed", finding: "Notre Dame has an AI research center and a $24B endowment. At this endowment size, AI company exposure through VC/PE funds is virtually certain. No major standalone investment is announced. Notre Dame does not publish itemized endowment holdings. Any AI programs or affiliations that do exist were not found to be significant enough to warrant a higher exposure rating.", disclosureNote: "Notre Dame does not publish itemized endowment holdings. AI exposure through the endowment's alternatives and private equity positions is not disclosed.", sources: [] },
+  { name: "Case Western Reserve University", grade: "X", gradeClass: "grade-X", pillClass: "pill-undisclosed", pillLabel: "undisclosed", finding: "CWRU has AI research partnerships. No major standalone investment is announced. CWRU does not publish itemized endowment holdings. Any AI programs or affiliations that do exist were not found to be significant enough to warrant a higher exposure rating.", disclosureNote: "Case Western does not publish itemized endowment holdings. AI exposure through the endowment's alternatives and private equity positions is not disclosed.", sources: [] },
+  { name: "Boston College", grade: "X", gradeClass: "grade-X", pillClass: "pill-undisclosed", pillLabel: "undisclosed", finding: "BC has AI research. No major standalone investment is announced. BC does not publish itemized endowment holdings. Any AI programs or affiliations that do exist were not found to be significant enough to warrant a higher exposure rating.", disclosureNote: "Boston College does not publish itemized endowment holdings. AI exposure through the endowment's alternatives and private equity positions is not disclosed.", sources: [] },
+  { name: "Tulane University", grade: "X", gradeClass: "grade-X", pillClass: "pill-undisclosed", pillLabel: "undisclosed", finding: "Tulane has AI research. No major standalone investment is announced. Tulane does not publish itemized endowment holdings. Any AI programs or affiliations that do exist were not found to be significant enough to warrant a higher exposure rating.", disclosureNote: "Tulane does not publish itemized endowment holdings. AI exposure through the endowment's alternatives and private equity positions is not disclosed.", sources: [] },
+  { name: "George Washington University", grade: "X", gradeClass: "grade-X", pillClass: "pill-undisclosed", pillLabel: "undisclosed", finding: "GWU has AI policy research given its DC location, serving as a pipeline for AI governance work with government agencies. No major standalone AI investment is announced. GWU does not publish itemized endowment holdings. Any AI programs or affiliations that do exist were not found to be significant enough to warrant a higher exposure rating.", disclosureNote: "GWU does not publish itemized endowment holdings. AI exposure through the endowment's alternatives and private equity positions is not disclosed.", sources: [] },
+  { name: "Syracuse University", grade: "X", gradeClass: "grade-X", pillClass: "pill-undisclosed", pillLabel: "undisclosed", finding: "Syracuse has growing AI research programs. No major standalone investment is announced. Syracuse does not publish itemized endowment holdings. Any AI programs or affiliations that do exist were not found to be significant enough to warrant a higher exposure rating.", disclosureNote: "Syracuse does not publish itemized endowment holdings. AI exposure through the endowment's alternatives and private equity positions is not disclosed.", sources: [] },
+  { name: "University of Connecticut", grade: "X", gradeClass: "grade-X", pillClass: "pill-undisclosed", pillLabel: "undisclosed", finding: "UConn has AI research programs. No major standalone investment is announced. UConn does not publish itemized endowment holdings. Any AI programs or affiliations that do exist were not found to be significant enough to warrant a higher exposure rating.", disclosureNote: "UConn does not publish itemized endowment holdings. AI exposure through the endowment's alternatives and private equity positions is not disclosed.", sources: [] },
+  { name: "Florida State University", grade: "X", gradeClass: "grade-X", pillClass: "pill-undisclosed", pillLabel: "undisclosed", finding: "FSU has AI research. No major standalone investment is announced. FSU does not publish itemized endowment holdings. Any AI programs or affiliations that do exist were not found to be significant enough to warrant a higher exposure rating.", disclosureNote: "FSU does not publish itemized endowment holdings. AI exposure through the endowment's alternatives and private equity positions is not disclosed.", sources: [] },
+  { name: "University of Miami", grade: "X", gradeClass: "grade-X", pillClass: "pill-undisclosed", pillLabel: "undisclosed", finding: "UM has AI research especially in climate and health AI. No major standalone investment is announced. UM does not publish itemized endowment holdings. Any AI programs or affiliations that do exist were not found to be significant enough to warrant a higher exposure rating.", disclosureNote: "Miami does not publish itemized endowment holdings. AI exposure through the endowment's alternatives and private equity positions is not disclosed.", sources: [] },
+  { name: "University of Massachusetts Amherst", grade: "X", gradeClass: "grade-X", pillClass: "pill-undisclosed", pillLabel: "undisclosed", finding: "UMass Amherst's College of Information and Computer Sciences (CICS) has growing AI research. No major standalone investment is announced. UMass does not publish itemized endowment holdings. Any AI programs or affiliations that do exist were not found to be significant enough to warrant a higher exposure rating.", disclosureNote: "UMass does not publish itemized endowment holdings. AI exposure through the endowment's alternatives and private equity positions is not disclosed.", sources: [] },
+  { name: "Rutgers University", grade: "X", gradeClass: "grade-X", pillClass: "pill-undisclosed", pillLabel: "undisclosed", finding: "Rutgers has AI research. No major standalone investment is announced. Rutgers does not publish itemized endowment holdings. Any AI programs or affiliations that do exist were not found to be significant enough to warrant a higher exposure rating.", disclosureNote: "Rutgers does not publish itemized endowment holdings. AI exposure through the endowment's alternatives and private equity positions is not disclosed.", sources: [] },
+  { name: "University of Iowa", grade: "X", gradeClass: "grade-X", pillClass: "pill-undisclosed", pillLabel: "undisclosed", finding: "UIowa has AI research. No major standalone investment is announced. UIowa does not publish itemized endowment holdings. Any AI programs or affiliations that do exist were not found to be significant enough to warrant a higher exposure rating.", disclosureNote: "Iowa does not publish itemized endowment holdings. AI exposure through the endowment's alternatives and private equity positions is not disclosed.", sources: [] },
+  { name: "University of Arizona", grade: "X", gradeClass: "grade-X", pillClass: "pill-undisclosed", pillLabel: "undisclosed", finding: "UArizona has an AI lab and NSF grants. No major standalone investment is announced. UArizona does not publish itemized endowment holdings. Any AI programs or affiliations that do exist were not found to be significant enough to warrant a higher exposure rating.", disclosureNote: "UArizona does not publish itemized endowment holdings. AI exposure through the endowment's alternatives and private equity positions is not disclosed.", sources: [] },
+  { name: "Wake Forest University", grade: "X", gradeClass: "grade-X", pillClass: "pill-undisclosed", pillLabel: "undisclosed", finding: "Wake Forest has AI research programs. No major standalone investment is announced. Wake Forest does not publish itemized endowment holdings. Any AI programs or affiliations that do exist were not found to be significant enough to warrant a higher exposure rating.", disclosureNote: "Wake Forest does not publish itemized endowment holdings. AI exposure through the endowment's alternatives and private equity positions is not disclosed.", sources: [] },
+  { name: "Brandeis University", grade: "X", gradeClass: "grade-X", pillClass: "pill-undisclosed", pillLabel: "undisclosed", finding: "Brandeis has AI research. No major standalone investment is announced. Brandeis does not publish itemized endowment holdings. Any AI programs or affiliations that do exist were not found to be significant enough to warrant a higher exposure rating.", disclosureNote: "Brandeis does not publish itemized endowment holdings. AI exposure through the endowment's alternatives and private equity positions is not disclosed.", sources: [] },
+  { name: "University of Rochester", grade: "X", gradeClass: "grade-X", pillClass: "pill-undisclosed", pillLabel: "undisclosed", finding: "UofR has the Goergen Institute for Data Science with growing AI research. No major standalone investment is announced. UofR does not publish itemized endowment holdings. Any AI programs or affiliations that do exist were not found to be significant enough to warrant a higher exposure rating.", disclosureNote: "Rochester does not publish itemized endowment holdings. AI exposure through the endowment's alternatives and private equity positions is not disclosed.", sources: [] },
+  { name: "Lehigh University", grade: "X", gradeClass: "grade-X", pillClass: "pill-undisclosed", pillLabel: "undisclosed", finding: "Lehigh has AI research. No major standalone investment is announced. Lehigh does not publish itemized endowment holdings. Any AI programs or affiliations that do exist were not found to be significant enough to warrant a higher exposure rating.", disclosureNote: "Lehigh does not publish itemized endowment holdings. AI exposure through the endowment's alternatives and private equity positions is not disclosed.", sources: [] },
+  { name: "University of Utah", grade: "X", gradeClass: "grade-X", pillClass: "pill-undisclosed", pillLabel: "undisclosed", finding: "U of Utah's Scientific Computing and Imaging (SCI) Institute has AI and visualization research. No major standalone investment is announced. U of Utah does not publish itemized endowment holdings. Any AI programs or affiliations that do exist were not found to be significant enough to warrant a higher exposure rating.", disclosureNote: "Utah does not publish itemized endowment holdings. AI exposure through the endowment's alternatives and private equity positions is not disclosed.", sources: [] },
+  { name: "University of Oregon", grade: "X", gradeClass: "grade-X", pillClass: "pill-undisclosed", pillLabel: "undisclosed", finding: "UO has AI research. No major standalone investment is announced. UO does not publish itemized endowment holdings. Any AI programs or affiliations that do exist were not found to be significant enough to warrant a higher exposure rating.", disclosureNote: "Oregon does not publish itemized endowment holdings. AI exposure through the endowment's alternatives and private equity positions is not disclosed.", sources: [] },
+  { name: "University of Kansas", grade: "X", gradeClass: "grade-X", pillClass: "pill-undisclosed", pillLabel: "undisclosed", finding: "KU has AI research. No major standalone investment is announced. KU does not publish itemized endowment holdings. Any AI programs or affiliations that do exist were not found to be significant enough to warrant a higher exposure rating.", disclosureNote: "Kansas does not publish itemized endowment holdings. AI exposure through the endowment's alternatives and private equity positions is not disclosed.", sources: [] },
+  { name: "University of Missouri", grade: "X", gradeClass: "grade-X", pillClass: "pill-undisclosed", pillLabel: "undisclosed", finding: "Mizzou has AI research. No major standalone investment is announced. Mizzou does not publish itemized endowment holdings. Any AI programs or affiliations that do exist were not found to be significant enough to warrant a higher exposure rating.", disclosureNote: "Mizzou does not publish itemized endowment holdings. AI exposure through the endowment's alternatives and private equity positions is not disclosed.", sources: [] },
+  { name: "Iowa State University", grade: "X", gradeClass: "grade-X", pillClass: "pill-undisclosed", pillLabel: "undisclosed", finding: "Iowa State has AI research. No major standalone investment is announced. Iowa State does not publish itemized endowment holdings. Any AI programs or affiliations that do exist were not found to be significant enough to warrant a higher exposure rating.", disclosureNote: "Iowa State does not publish itemized endowment holdings. AI exposure through the endowment's alternatives and private equity positions is not disclosed.", sources: [] },
+  { name: "North Carolina State University", grade: "X", gradeClass: "grade-X", pillClass: "pill-undisclosed", pillLabel: "undisclosed", finding: "NC State has the NSC AI Center with significant AI research and industry funding arrangements. No major standalone investment figure is publicly announced. NC State does not publish itemized endowment holdings. Any AI programs or affiliations that do exist were not found to be significant enough to warrant a higher exposure rating.", disclosureNote: "NC State does not publish itemized endowment holdings. AI exposure through the endowment's alternatives and private equity positions is not disclosed.", sources: [] },
+  { name: "University at Buffalo (SUNY)", grade: "X", gradeClass: "grade-X", pillClass: "pill-undisclosed", pillLabel: "undisclosed", finding: "UB has AI research. No major standalone investment is announced. UB does not publish itemized endowment holdings. Any AI programs or affiliations that do exist were not found to be significant enough to warrant a higher exposure rating.", disclosureNote: "UB does not publish itemized endowment holdings. AI exposure through the endowment's alternatives and private equity positions is not disclosed.", sources: [] },
+  { name: "Colorado State University", grade: "X", gradeClass: "grade-X", pillClass: "pill-undisclosed", pillLabel: "undisclosed", finding: "CSU has AI research. No major standalone investment is announced. CSU does not publish itemized endowment holdings. Any AI programs or affiliations that do exist were not found to be significant enough to warrant a higher exposure rating.", disclosureNote: "CSU does not publish itemized endowment holdings. AI exposure through the endowment's alternatives and private equity positions is not disclosed.", sources: [] },
+  { name: "American University", grade: "X", gradeClass: "grade-X", pillClass: "pill-undisclosed", pillLabel: "undisclosed", finding: "AU has AI policy and data science research given its DC location. No major standalone investment is announced. AU does not publish itemized endowment holdings. Any AI programs or affiliations that do exist were not found to be significant enough to warrant a higher exposure rating.", disclosureNote: "AU does not publish itemized endowment holdings. AI exposure through the endowment's alternatives and private equity positions is not disclosed.", sources: [] },
+  { name: "Marquette University", grade: "X", gradeClass: "grade-X", pillClass: "pill-undisclosed", pillLabel: "undisclosed", finding: "Marquette has AI ethics research. No major standalone investment is announced. Marquette does not publish itemized endowment holdings. Any AI programs or affiliations that do exist were not found to be significant enough to warrant a higher exposure rating.", disclosureNote: "Marquette does not publish itemized endowment holdings. AI exposure through the endowment's alternatives and private equity positions is not disclosed.", sources: [] },
+  { name: "University of Kentucky", grade: "X", gradeClass: "grade-X", pillClass: "pill-undisclosed", pillLabel: "undisclosed", finding: "UK has AI research activity across its colleges and a growing computing infrastructure. UK does not publish itemized endowment holdings. Any AI programs or affiliations that do exist were not found to be significant enough to warrant a higher exposure rating.", disclosureNote: "UK does not publish itemized endowment holdings. AI exposure through the endowment's alternatives and private equity positions is not disclosed.", sources: [] },
+  { name: "University of Oklahoma", grade: "X", gradeClass: "grade-X", pillClass: "pill-undisclosed", pillLabel: "undisclosed", finding: "OU has AI and data science research programs and has made investments in computing infrastructure. OU does not publish itemized endowment holdings. Any AI programs or affiliations that do exist were not found to be significant enough to warrant a higher exposure rating.", disclosureNote: "OU does not publish itemized endowment holdings. AI exposure through the endowment's alternatives and private equity positions is not disclosed.", sources: [] },
+  { name: "Louisiana State University", grade: "X", gradeClass: "grade-X", pillClass: "pill-undisclosed", pillLabel: "undisclosed", finding: "LSU has AI research initiatives and has expanded its computing and data science programs in recent years. LSU does not publish itemized endowment holdings. Any AI programs or affiliations that do exist were not found to be significant enough to warrant a higher exposure rating.", disclosureNote: "LSU does not publish itemized endowment holdings. AI exposure through the endowment's alternatives and private equity positions is not disclosed.", sources: [] }
+
+];
+
+SCHOOLS.forEach(s => {
+  if (s.gradeClass === 'grade-X') {
+    s.exposureLabel = 'Undisclosed';
+  } else if (s.gradeClass === 'grade-F') {
+    s.exposureLabel = 'Extreme';
+  } else if (s.gradeClass === 'grade-D') {
+    s.exposureLabel = 'Confirmed';
+  } else if (s.gradeClass === 'grade-C') {
+    s.exposureLabel = 'Moderate';
+  } else if (s.gradeClass === 'grade-B') {
+    s.exposureLabel = 'Low';
+  } else {
+    s.exposureLabel = s.grade;
+  }
+});
+
+document.getElementById('searchMeta').textContent = SCHOOLS.length + ' institutions on record';
+
+const list = document.getElementById('schoolList');
+SCHOOLS.forEach((s, i) => {
+  const li = document.createElement('li');
+  li.className = 'school-card';
+  li.dataset.name = s.name.toLowerCase();
+
+  const sourcesHtml = s.sources.length > 0
+    ? `<div class="panel-sources">
+        <div class="panel-sources-label">Primary sources</div>
+        ${s.sources.map(src => `<a class="panel-source-link" href="${src.url}" target="_blank" rel="noopener">${src.label}</a>`).join('')}
+      </div>`
+    : '';
+
+  const hasUndisclosed = s.pillLabel === 'undisclosed';
+  const badgeContent = hasUndisclosed
+    ? `<span style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--cond);font-size:22px;font-weight:900;color:rgba(255,255,255,0.9);z-index:2;letter-spacing:0;line-height:1;">!</span>`
+    : '';
+
+  li.innerHTML = `
+    <div class="school-header" onclick="toggleCard(this)">
+      <div class="school-name">${s.name}</div>
+      <div class="school-header-right">
+        <div class="grade-badge ${s.gradeClass}" style="position:relative;">${badgeContent}</div>
+        <div class="toggle-icon">[ + ]</div>
+      </div>
+    </div>
+    <div class="school-panel">
+      <div class="panel-inner">
+        <div class="panel-field" style="margin-bottom:20px;">
+          <div class="panel-field-label">AI Exposure Level</div>
+          <div class="panel-exposure-label ${s.gradeClass}">${s.exposureLabel}</div>
+        </div>
+
+        <div class="panel-field">
+          <div class="disclosure-status-line">
+            <span class="panel-field-label" style="margin-bottom:0;">Endowment Disclosure Status</span>
+            <span class="disclosure-pill ${s.pillClass}">${s.pillLabel}</span>
+          </div>
+          <div class="panel-field-value ${s.grade === 'F' ? 'alert' : s.grade === 'D' ? 'warn' : 'neutral'}" style="margin-top:10px;">${s.disclosureNote}</div>
+        </div>
+
+        <div class="panel-field">
+          <div class="panel-field-label">What we found</div>
+          <div class="panel-field-value">${s.finding}</div>
+        </div>
+
+        ${sourcesHtml}
+      </div>
+    </div>
+  `;
+  list.appendChild(li);
+});
+
+const searchInput = document.getElementById('searchInput');
+const searchMeta  = document.getElementById('searchMeta');
+const noResults   = document.getElementById('noResults');
+
+searchInput.addEventListener('input', () => {
+  const q = searchInput.value.toLowerCase().trim();
+  const cards = list.querySelectorAll('.school-card');
+  let visible = 0;
+  cards.forEach(card => {
+    const match = !q || card.dataset.name.includes(q);
+    card.style.display = match ? '' : 'none';
+    if (match) visible++;
+  });
+  noResults.style.display = visible === 0 ? 'block' : 'none';
+  searchMeta.textContent = q
+    ? `${visible} result${visible !== 1 ? 's' : ''} for "${searchInput.value}"`
+    : `${SCHOOLS.length} institutions on record`;
+});
+
+function toggleCard(header) {
+  const card = header.closest('.school-card');
+  const icon = header.querySelector('.toggle-icon');
+  const isOpen = card.classList.contains('open');
+  document.querySelectorAll('.school-card.open').forEach(c => {
+    c.classList.remove('open');
+    c.querySelector('.toggle-icon').textContent = '[ + ]';
+  });
+  if (!isOpen) {
+    card.classList.add('open');
+    icon.textContent = '[ − ]';
+    setTimeout(() => card.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 60);
+  }
+}
+
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('on'); io.unobserve(e.target); }
+  });
+}, { threshold: 0.1 });
+document.querySelectorAll('.rv').forEach(el => io.observe(el));
+
+setTimeout(() => {
+  document.getElementById('heroBody').classList.add('on');
+}, 1200);
+
+function openRubric() {
+  document.getElementById('rubric-drawer').classList.add('open');
+  document.getElementById('rubric-overlay').classList.add('open');
+  document.getElementById('rubric-tab').classList.add('drawer-open');
+}
+function closeRubric() {
+  document.getElementById('rubric-drawer').classList.remove('open');
+  document.getElementById('rubric-overlay').classList.remove('open');
+  document.getElementById('rubric-tab').classList.remove('drawer-open');
+}
+function toggleRubric() {
+  const drawer = document.getElementById('rubric-drawer');
+  if (drawer.classList.contains('open')) {
+    closeRubric();
+  } else {
+    openRubric();
+  }
+}
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeRubric();
+});
+
+window.addEventListener('load', () => {
+  const tab = document.getElementById('rubric-tab');
+  const drawer = document.getElementById('rubric-drawer');
+  function tease() {
+    tab.classList.add('teasing');
+    drawer.classList.add('teasing');
+    tab.addEventListener('animationend', () => {
+      tab.classList.remove('teasing');
+    }, { once: true });
+    drawer.addEventListener('animationend', () => {
+      drawer.classList.remove('teasing');
+    }, { once: true });
+  }
+  setTimeout(tease, 2000);
+});
+
+function openModal()  { document.getElementById('schoolModal').classList.add('open'); }
+function closeModal() { document.getElementById('schoolModal').classList.remove('open'); }
+
+const FORM_ACTION = 'https://docs.google.com/forms/d/e/1FAIpQLSe9XfA60dlUWyIXoQA_LGn1bYcGNDxJUgmrK3H-8jPOMAk4_g/formResponse';
+const ENTRY_NAME   = 'entry.403225748';
+const ENTRY_SCHOOL = 'entry.1173524453';
+const ENTRY_EMAIL  = 'entry.1189360225';
+const ENTRY_NOTE   = 'entry.1298521177';
+
+function submitForm() {
+  const inputs = document.querySelectorAll('#formWrap input, #formWrap textarea');
+  const name   = inputs[0].value.trim();
+  const school = inputs[1].value.trim();
+  const email  = inputs[2].value.trim();
+  const note   = inputs[3].value.trim();
+
+  if (!name || !email) {
+    inputs[!name ? 0 : 2].focus();
+    return;
+  }
+
+  const body = new URLSearchParams();
+  body.append(ENTRY_NAME,   name);
+  body.append(ENTRY_SCHOOL, school);
+  body.append(ENTRY_EMAIL,  email);
+  body.append(ENTRY_NOTE,   note);
+
+  fetch(FORM_ACTION, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: body.toString()
+  });
+
+  document.getElementById('formWrap').style.display = 'none';
+  document.getElementById('formSuccess').style.display = 'block';
+}
+
+document.getElementById('schoolModal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+</script>
+</body>
+</html>

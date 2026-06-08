@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Universities Are Investing Billions in the AI Companies Dismantling Their Own Graduates' Careers — ØFF Independent</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@300;400&family=Share+Tech+Mono&family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --black: #0c0c0c;
+  --white: #f2f2f0;
+  --mid:   #777;
+  --rule:  #ccc;
+  --mono:  'Share Tech Mono', monospace;
+  --cond:  'Barlow Condensed', sans-serif;
+  --body:  'Barlow', sans-serif;
+  --serif: Georgia, 'Times New Roman', serif;
+  --pixel: 'Press Start 2P', monospace;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--white);
+  color: var(--black);
+  font-family: var(--body);
+  font-weight: 300;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+@keyframes gr {
+  0%,100%{ transform:translate(0,0) }
+  25%    { transform:translate(-2px,-1px) }
+  50%    { transform:translate(1px,2px) }
+  75%    { transform:translate(-1px,1px) }
+}
+.grain {
+  position: fixed; inset:-50%;
+  width:200%; height:200%;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 180px;
+  opacity: 0.03;
+  pointer-events: none;
+  z-index: 999;
+  animation: gr 0.3s steps(1) infinite;
+}
+
+.wrap {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 0 28px;
+}
+
+@keyframes blink {
+  0%,49.9%{ opacity:1 } 50%,100%{ opacity:0 }
+}
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 0 16px;
+  border-bottom: 2px solid var(--black);
+}
+.logo {
+  font-family: var(--pixel);
+  font-size: 13px;
+  color: var(--black);
+  text-decoration: none;
+  letter-spacing: .04em;
+}
+.status {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--mid);
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.status-dot {
+  width: 5px; height: 5px;
+  background: var(--black);
+  border-radius: 50%;
+  animation: blink 1.4s step-end infinite;
+  flex-shrink: 0;
+}
+
+.topbar-nav {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+.topbar-link {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--mid);
+  text-decoration: none;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  transition: color .2s;
+}
+.topbar-link:hover { color: var(--black); }
+.article-header {
+  padding: 64px 0 48px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.article-kicker {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .26em;
+  color: var(--mid);
+  text-transform: uppercase;
+  margin-bottom: 28px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.article-kicker::after {
+  content: ''; flex:1; height:1px;
+  background: var(--rule); max-width: 80px;
+}
+
+.article-hed {
+  font-family: var(--cond);
+  font-weight: 900;
+  font-size: clamp(30px, 6vw, 56px);
+  line-height: .92;
+  letter-spacing: -.025em;
+  text-transform: uppercase;
+  color: var(--black);
+  margin-bottom: 32px;
+}
+.article-hed .word { display: block; }
+.article-hed .word-inner { display: inline; }
+
+.article-dek {
+  font-family: var(--serif);
+  font-size: 14px;
+  font-style: italic;
+  line-height: 1.9;
+  color: var(--mid);
+  letter-spacing: .015em;
+  margin-bottom: 28px;
+  max-width: 580px;
+}
+
+.article-meta {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .16em;
+  color: var(--mid);
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.article-meta-sep { color: var(--rule); }
+
+.lede-p { margin-bottom: 22px; }
+
+/* ARTICLE BODY */
+.article-body { padding: 40px 0 0; }
+
+.article-lede {
+  font-family: var(--serif);
+  font-size: 16px;
+  line-height: 2;
+  color: var(--black);
+  letter-spacing: .015em;
+  padding-bottom: 40px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.rv { }
+.rv.on { }
+.rv.d1 { }
+.rv.d2 { }
+.rv.d3 { }
+
+.article-section-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .26em;
+  color: var(--mid);
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.article-section-label::after {
+  content: ''; flex:1; height:1px;
+  background: var(--rule); max-width: 80px;
+}
+
+.article-section-hed {
+  font-family: var(--cond);
+  font-weight: 900;
+  font-size: clamp(28px, 5vw, 44px);
+  line-height: .95;
+  letter-spacing: -.02em;
+  text-transform: uppercase;
+  color: var(--black);
+  margin-bottom: 28px;
+}
+
+.article-graf {
+  font-family: var(--serif);
+  font-size: 16px;
+  line-height: 2;
+  color: var(--black);
+  letter-spacing: .015em;
+  margin-bottom: 22px;
+}
+.article-graf:last-child { margin-bottom: 0; }
+
+.article-section {
+  padding: 48px 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.pullquote {
+  border-left: 3px solid var(--black);
+  padding: 20px 0 20px 24px;
+  margin: 36px 0;
+}
+.pullquote-text {
+  font-family: var(--serif);
+  font-weight: bold;
+  font-style: italic;
+  font-size: clamp(18px, 3vw, 26px);
+  letter-spacing: -.01em;
+  line-height: 1.35;
+  color: var(--black);
+}
+
+.stat-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1px;
+  background: var(--rule);
+  border: 1px solid var(--rule);
+  margin: 36px 0;
+}
+.stat-cell { background: var(--white); padding: 24px 20px; }
+.stat-num {
+  font-family: var(--cond);
+  font-weight: 900;
+  font-size: clamp(30px, 6vw, 48px);
+  letter-spacing: -.03em;
+  line-height: 1;
+  color: var(--black);
+  margin-bottom: 8px;
+}
+.stat-label {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--mid);
+  line-height: 1.6;
+}
+
+a {
+  color: var(--black);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: var(--rule);
+  transition: text-decoration-color .2s;
+}
+a:hover { text-decoration-color: var(--black); }
+
+.article-note {
+  font-family: var(--mono);
+  font-size: 10px;
+  line-height: 1.8;
+  color: var(--mid);
+  letter-spacing: .01em;
+  padding-top: 16px;
+  padding-bottom: 16px;
+  border-top: 1px solid var(--rule);
+  margin-top: 16px;
+  margin-bottom: 0;
+}
+
+.article-cta {
+  padding: 56px 0 48px;
+  border-top: 2px solid var(--black);
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 36px;
+  flex-wrap: wrap;
+}
+.article-cta-text {
+  font-family: var(--cond);
+  font-weight: 900;
+  font-size: clamp(32px, 6vw, 52px);
+  line-height: .95;
+  letter-spacing: -.02em;
+  text-transform: uppercase;
+  color: var(--black);
+}
+
+.btn {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--white);
+  background: var(--black);
+  border: 1px solid var(--black);
+  padding: 13px 26px;
+  cursor: pointer;
+  text-decoration: none;
+  flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+  transition: color .3s;
+  display: inline-block;
+}
+.btn::before {
+  content: ''; position: absolute; inset: 0;
+  background: var(--white);
+  transform: translateY(100%);
+  transition: transform .35s cubic-bezier(.22,1,.36,1);
+}
+.btn:hover { color: var(--black); text-decoration: none; }
+.btn:hover::before { transform: translateY(0); }
+.btn-label { position: relative; z-index: 1; }
+
+.bottombar {
+  border-top: 1px solid var(--rule);
+  padding: 16px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 32px;
+}
+.bottombar-copy {
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--mid);
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+.bottombar-links { display: flex; gap: 22px; }
+.bottombar-links a {
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--mid);
+  text-decoration: none;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  transition: color .2s;
+}
+.bottombar-links a:hover { color: var(--black); }
+
+.modal-bg {
+  display: none; position:fixed; inset:0;
+  background: rgba(242,242,240,.97);
+  z-index: 800;
+  align-items: center; justify-content:center;
+  padding: 24px;
+}
+.modal-bg.open { display: flex; }
+.modal {
+  background: var(--white);
+  border: 2px solid var(--black);
+  padding: 40px;
+  max-width: 480px; width:100%;
+  position: relative;
+  animation: mIn .4s cubic-bezier(.22,1,.36,1);
+}
+@keyframes mIn {
+  from { opacity:0; transform:translateY(16px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+.modal-close {
+  position: absolute; top:16px; right:16px;
+  font-family: var(--mono); font-size:10px;
+  color: var(--mid); background:none; border:none;
+  cursor: pointer; letter-spacing:.14em;
+  text-transform: uppercase; transition: color .2s;
+}
+.modal-close:hover { color: var(--black); }
+.modal-title {
+  font-family: var(--cond); font-weight: 900;
+  font-size: 30px; text-transform: uppercase;
+  letter-spacing: -.01em; color: var(--black);
+  margin-bottom: 28px; line-height: 1.05;
+}
+.form-field { margin-bottom: 16px; }
+.form-field label {
+  display: block; font-family: var(--mono);
+  font-size: 9px; letter-spacing:.2em;
+  color: var(--mid); text-transform:uppercase; margin-bottom: 7px;
+}
+.form-field input, .form-field textarea {
+  width: 100%; background: transparent;
+  border: none; border-bottom: 1px solid var(--black);
+  color: var(--black); font-family: var(--mono);
+  font-size: 13px; padding: 7px 0; outline:none; border-radius: 0;
+}
+.form-field textarea { resize:none; height:56px; }
+.form-note {
+  font-family: var(--mono); font-size:10px;
+  color: var(--mid); margin-top:16px; line-height:1.7; letter-spacing: .03em;
+}
+.form-success {
+  display: none; font-family: var(--cond);
+  font-size: 30px; font-weight:900;
+  text-transform: uppercase; color: var(--black);
+  letter-spacing: -.01em; line-height:1.2;
+}
+
+</style>
+</head>
+<body>
+
+<div class="grain"></div>
+
+<div class="modal-bg" id="schoolModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">[ close ]</button>
+    <div id="formWrap">
+      <div class="modal-title">Join us.</div>
+      <div class="form-field"><label>Your name</label><input type="text"></div>
+      <div class="form-field"><label>Your school</label><input type="text"></div>
+      <div class="form-field"><label>Email</label><input type="email"></div>
+      <div class="form-field">
+        <label>What's happening at your school? (optional)</label>
+        <textarea></textarea>
+      </div>
+      <button class="btn" style="margin-top:22px;width:100%;" onclick="submitForm()">
+        <span class="btn-label">[ join ]</span>
+      </button>
+      <p class="form-note">By clicking join, you agree to receive next steps via email. No spam, guaranteed. View our <a href="https://offmovement.org/privacy" target="_blank">Privacy Policy</a> for more information.</p>
+      <p class="form-note" style="margin-top:10px;">By joining, you confirm that you are located in the United States.</p>
+    </div>
+    <div class="form-success" id="formSuccess">
+      Received.<br>
+      <span style="font-family:var(--mono);font-size:12px;font-weight:400;text-transform:none;letter-spacing:.05em;">We'll be in touch.</span>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="topbar">
+    <a class="logo" href="https://offmovement.org">OFF</a>
+    <div class="topbar-nav">
+      <a class="topbar-link" href="https://offmovement.org/about" target="_self">About</a>
+      <a class="topbar-link" href="index.html">Home</a>
+    </div>
+  </div>
+
+  <div class="article-header">
+    <div class="article-kicker">Investigation</div>
+
+    <h1 class="article-hed">
+      <span class="word"><span class="word-inner">Universities</span></span>
+      <span class="word"><span class="word-inner">Are Investing</span></span>
+      <span class="word"><span class="word-inner">Billions in the</span></span>
+      <span class="word"><span class="word-inner">AI Companies</span></span>
+      <span class="word"><span class="word-inner">Dismantling Their</span></span>
+      <span class="word"><span class="word-inner">Graduates' Careers</span></span>
+    </h1>
+
+    <div class="article-dek" id="articleDek">
+      To fight the emerging AI oligarchs, we must look beyond Silicon Valley. Our universities are handing over their capital, intellect, and campuses to tech elites, while leaving their students to bear the consequences.
+    </div>
+
+    <div class="article-meta" id="articleMeta">
+      <span>Published June 7, 2026</span>
+    </div>
+  </div>
+
+  <div class="article-body">
+
+    <!-- LEDE -->
+    <div class="article-lede" id="articleLede">
+      <p class="lede-p">In 2019, the University of Michigan invested $20 million in OpenAI. The position was listed in <a href="https://www.michigandaily.com/news/research/umich-reports-high-return-rate-on-endowment-after-increased-investments-in-ai-and-crypto/" target="_blank">annual reports</a> under "alternative assets." Nobody told students or faculty.</p>
+      <p class="lede-p">That stake is now <a href="https://thenextweb.com/news/michigan-openai-early-investment-billions-endowment" target="_blank">worth $2 billion</a>. It was only recently discovered in court documents after <a href="https://thenextweb.com/news/michigan-openai-early-investment-billions-endowment" target="_blank">Elon Musk sued OpenAI</a>.</p>
+      <p class="lede-p">Michigan is not an outlier. Our analysis of 90 leading American universities revealed an alarming pattern: institutional endowments are quietly funneling capital into the very AI companies eliminating the jobs students are paying to pursue — often with no disclosure, no press release, and no obligation to ever say a word. Billions more from corporate partnerships, gifts, and government contracts are being poured into AI ventures.</p>
+      <p class="lede-p" style="margin-bottom:0;">You can view the full results of our analysis, and your university's report card, <a href="https://offmovement.org/report-card" target="_blank">here</a>.</p>
+    </div>
+
+    <!-- SECTION 1 -->
+    <div class="article-section rv">
+      <div class="article-section-label">Follow the Money</div>
+      <h2 class="article-section-hed">The Endowment Scandal</h2>
+
+      <p class="article-graf rv d1">
+        University endowments don't usually invest in AI companies directly. They deploy capital as limited partners in VC funds (such as Sequoia Capital, Andreessen Horowitz, Thrive Capital, Khosla Ventures) who hold positions in OpenAI, Anthropic, xAI, and dozens of other AI companies.
+      </p>
+
+      <p class="article-graf rv d2">
+        At Michigan, <a href="https://fortune.com/2023/12/19/sam-altman-university-michigan-venture-fund/" target="_blank">documents obtained by Fortune</a> confirm LP positions in Sequoia, Andreessen Horowitz, Accel, General Catalyst, and Y Combinator. These five firms have collectively deployed more capital into AI than any other institutions on Earth. In <a href="https://regents.umich.edu/files/meetings/09-22/2022-09-IX-2.pdf" target="_blank">a single board vote in September 2022</a>, Michigan committed $75 million across seven Sequoia funds. On top of the $2 billion OpenAI position. On top of a separate commitment to Andreessen Horowitz. On top of an additional $180 million to Sam Altman's personal AI venture fund, Hydrazine Capital.<br></br>This is one school. There are 89 more.
+      </p>
+
+      <p class="article-graf rv d1">
+        The University of California Regents oversee <a href="https://www.ucop.edu/investment-office/index.html" target="_blank">approximately $190 billion</a> across ten campuses including Berkeley, UCLA, and UC San Diego. State law requires the regents to publish their private equity holdings, <a href="https://www.ucop.edu/investment-office/_files/updates/pe_irr_06-30-21.pdf" target="_blank">revealing</a> a portfolio engineered for AI exposure: over $600 million committed to Sequoia across eight funds, $157 million to Khosla Ventures (which holds direct OpenAI equity), and $235 million to Notable Capital — the same fund that swung from -48% to 96% IRR in a single year, driven by its Anthropic exposure (the company behind Claude). While technically public, this information is buried in dense financial reports, leaving UC's 299,000 students completely unaware.
+      </p>
+
+      <p class="article-graf rv d2">
+        The University of Texas system is one of the only other institutions whose holdings are partially visible. UTIMCO manages <a href="https://pipelineroad.com/directory/utimco-endowment" target="_blank">approximately $44 billion</a> across UT and Texas A&M and has disclosed venture positions in Thrive Capital, Sequoia, and Notable Capital. <a href="https://www.newcomer.co/p/vc-returns-revealed-recent-thrive" target="_blank">Thrive's 2022 fund</a> posted a 126% internal rate of return as of late 2025, the highest single-vintage IRR ever recorded in UTIMCO's public disclosures. It is anchored by early OpenAI and Cursor positions.  UTIMCO's own CIO <a href="https://www.pionline.com/institutional-investors/endowments-foundations/pi-utimco-university-texas-investment-management-artificial-intelligence-investment-exposure-use/" target="_blank">publicly acknowledged</a> the fund is currently 5% overweight in AI exposure.
+      </p>
+
+      <p class="article-graf rv d3">
+        Most public institutions, however, have no disclosure obligation. The University of Virginia manages <a href="https://uvimco.org/wp-content/uploads/2025/09/UVIMCOAnnualReport2025Highlights.pdf" target="_blank">$15.5 billion through UVIMCO</a> and <a href="https://pipelineroad.com/directory/university-of-virginia-endowment" target="_blank">allocates 58% to alternatives</a> including venture capital. In their FAQ, they <a href="https://uvimco.org/wp-content/uploads/2025/08/UVIMCO-FAQ-JULY-2025-FINAL.pdf" target="_blank">openly state</a> it is "contractually required to preserve the confidentiality" of its fund managers. In simpler terms: a public university is using private contractual secrecy clauses to hide where institutional money goes.
+      </p>
+
+      <p class="article-graf rv d1">
+        The investments of private universities, on the other hand, are notoriously opaque: Not one currently discloses endowment holdings. Despite being kept secret, <a href="https://www.markovprocesses.com/blog/fy25-endowments-ai-and-crypto-to-the-moon/" target="_blank">an independent analysis from Markov Processes International</a> has managed to shed light on two elite schools. MPI reports that in 2025, a standard alternatives-heavy endowment portfolio should have returned 11–12%. Yet, <a href="https://www.ai-cio.com/news/mit-endowment-returns-14-8-in-fiscal-2025/" target="_blank">MIT returned 14.8%</a> and <a href="https://news.stanford.edu/stories/2025/10/report-investment-portfolio-value-endowment" target="_blank">Stanford returned 14.3%</a>. MPI suggests this gap is best explained by concentrated exposure to AI and digital assets. Neither university has challenged this analysis, nor provided public transparency on their specific allocations.
+      </p>
+    </div>
+
+    <!-- SECTION 2 -->
+    <div class="article-section rv">
+      <div class="article-section-label">Beyond Assets</div>
+      <h2 class="article-section-hed">A Story Bigger<br>Than Endowments</h2>
+
+      <p class="article-graf rv d1">
+        Our full analysis revealed a series of controversial AI entanglements beyond endowments, totaling a figure in the billions. The University of Michigan, for instance, is <a href="https://www.404media.co/a-small-town-is-fighting-a-1-2-billion-ai-datacenter-for-americas-nuclear-weapon-scientists/" target="_blank">financing $850 million</a> of a $1.2 billion AI computing center for nuclear weapons development and private-sector research. The university purchased land and informed the local township supervisor about their plans <a href="https://planetdetroit.org/2026/03/university-of-michigan-huron-river-data-center/" target="_blank">by text message</a>. After fierce resistance from the local community, Michigan is now eyeing a low-income area <a href="https://planetdetroit.org/2025/12/university-of-michigan-data-center-funding/" target="_blank">already in the 85th percentile for pollution exposure</a> to house the facility.
+      </p>
+
+      <p class="article-graf rv d2">
+        At UC Berkeley, <a href="https://bair.berkeley.edu/blog/future/" target="_blank">Meta, Amazon, Google, and Microsoft directly co-fund and co-direct AI research</a> inside Berkeley's own labs through the BAIR Open Research Commons. Corporate researchers are embedded directly within university labs, co-authoring papers and blurring the line between academic independence and commercial interests. Faculty members simultaneously hold paid positions at the same companies. An additional <a href="https://www.dailycal.org/news/campus/research-and-ideas/12m-grant-for-uc-berkeley-affiliated-ai-startups-launches/" target="_blank">$12 million fund</a> was launched in 2025 to convert that university research into private equity.
+      </p>
+
+      <p class="article-graf rv d3">
+        At the University of Washington, technology companies such as Amazon have effectively annexed the Paul G. Allen School of Computer Science, with millions in corporate research funding supporting academic initiatives. Faculty members hold simultaneous Amazon Scholar appointments, and <a href="https://www.sciencehub.uw.edu/2022/02/09/uw-and-amazon-announce-creation-of-the-science-hub/" target="_blank">research is directed at Amazon's commercial robotics priorities</a>. Internal Amazon documents, <a href="https://www.nytimes.com/2025/10/21/technology/inside-amazons-plans-to-replace-workers-with-robots.html" target="_blank">obtained by the New York Times</a>, project the replacement of more than 600,000 jobs with autonomous technology by 2033. The university research program and Amazon's displacement plan are not separate. They are two sides of the same project.
+      </p>
+
+      <p class="article-graf rv d1">
+        These examples are merely a shortlist, and do not touch upon several university-backed datacenters, a plethora of corporate partnerships, gifts, and military contracts funding AI for war in dozens of universities nationwide. The full school-by-school breakdown is available <a href="https://offmovement.org/report-card" target="_blank">here</a>.
+      </p>
+    </div>
+
+    <!-- SECTION 3 -->
+    <div class="article-section rv">
+      <div class="article-section-label">A Looming Crisis</div>
+      <h2 class="article-section-hed">The Students<br>Paying For It</h2>
+
+      <p class="article-graf rv d1">
+        The class of 2025 entered one of the worst white-collar job markets in a generation. <a href="https://www.newyorkfed.org/research/college-labor-market" target="_blank">Overall unemployment for recent graduates reached 5.8%</a> in early 2025, though that understates the damage: underemployment, or graduates working jobs that don't require a degree, reached 41.3%. Furthermore, entry-level postings in finance, law, consulting, and media fell by double digits in 2024 and 2025 while enterprise AI adoption simultaneously accelerated.
+      </p>
+
+      <p class="article-graf rv d2">
+        <a href="https://www.burningglassinstitute.org/s/No-Country-for-Young-Grads-V_Final72925-1.pdf" target="_blank">The Burning Glass Institute</a> found that the gravest declines were concentrated in precisely the knowledge-work categories most new graduates enter: data analysis, paralegal work, content creation, basic software development, and financial modeling.
+      </p>
+
+      <p class="article-graf rv d3">
+        The evidence continues: <a href="https://www.cnbc.com/2025/10/15/jpmorgan-chase-goldman-sachs-ai-hiring.html" target="_blank">JPMorgan told managers to maintain a strong bias against new hires</a> as it deploys AI. <a href="https://www.cnbc.com/2025/10/15/jpmorgan-chase-goldman-sachs-ai-hiring.html" target="_blank">Goldman's CEO announced</a> the bank would reorganize its people around AI productivity. <a href="https://digitaleconomy.stanford.edu/news/ai-and-labor-markets-what-we-know-and-dont-know/" target="_blank">A Stanford working paper</a> found employment for 22-to-25-year-olds in AI-exposed occupations (defined as software, accounting, clerical work, and customer service) dropped 13% since 2022. <a href="https://fortune.com/2026/04/06/ai-tech-displacement-effect-gen-z-16000-jobs-per-month/" target="_blank">Goldman Sachs estimated in April 2026</a> that AI is eliminating approximately 16,000 American jobs per month, with Gen Z absorbing a disproportionate share (a figure that likely undercounts the true impact because it doesn't capture hiring slowdowns that compound displacement, as noted by Goldman's own economists).
+      </p>
+
+      <p class="article-graf rv d2">
+        These findings are not projections. The culling of young professionals has already begun — and the universities funding AI technology know this. Their own researchers publish the papers documenting it. They warn about it at commencement ceremonies. And then, they cash in.
+      </p>
+    </div>
+
+    <!-- SECTION 4 -->
+    <div class="article-section rv" style="border-bottom: none; padding-bottom: 0;">
+      <div class="article-section-label">The Reckoning</div>
+      <h2 class="article-section-hed">The Corporate<br>Seizure of<br>Higher Education</h2>
+
+      <p class="article-graf rv d1">
+        Legislation requiring universities to disclose itemized endowment holdings has been <a href="https://www.congress.gov/bill/118th-congress/senate-bill/2187" target="_blank">introduced in Congress multiple times</a>. Universities <a href="https://www.insidehighered.com/news/government/politics-elections/2026/01/23/higher-ed-spent-millions-lobbying-2025" target="_blank">spent $37 million lobbying Congress in 2025</a>. Endowment policy was a top priority. No legislation passed.
+      </p>
+
+      <p class="article-graf rv d2">
+        That is, perhaps, the clearest possible statement of whose interests higher education institutions now serve. American universities were built on a paramount, foundational premise: that knowledge belongs to the public, and that institutions entrusted with educating a generation are accountable to that generation.
+      </p>
+
+      <p class="article-graf rv d3">
+        Today, that premise has been discarded in favor of predatory investing, corporate collaborations, and other backroom deals with technology companies and billionaires. Instead of an education that provides social mobility, students receive a credential for a job market being systematically dismantled by the same institutions their tuition keeps alive.
+      </p>
+
+      <p class="article-graf rv d2">And the universities won't stop until it costs them something.</p>
+
+      <p class="article-graf rv d3">
+        Right now, it costs them nothing.
+      </p>
+
+      <div class="article-note rv d1">
+        
+        Questions? Concerns? The OFF team can be reached at <a href="mailto:info@offmovement.org">info@offmovement.org</a>.<br><br>
+        This analysis does not consitute finacial or legal advice.
+      </div>
+    </div>
+
+  </div>
+
+  <div class="bottombar">
+    <span class="bottombar-copy">offmovement.org</span>
+    <div class="bottombar-links">
+      <a href="#" onclick="openModal();return false;">join us</a>
+      <a href="https://offmovement.org/privacy" target="_blank">privacy</a>
+    </div>
+  </div>
+
+</div>
+
+<script>
+
+function openModal()  { document.getElementById('schoolModal').classList.add('open'); }
+function closeModal() { document.getElementById('schoolModal').classList.remove('open'); }
+
+const FORM_ACTION = 'https://docs.google.com/forms/d/e/1FAIpQLSe9XfA60dlUWyIXoQA_LGn1bYcGNDxJUgmrK3H-8jPOMAk4_g/formResponse';
+const ENTRY_NAME   = 'entry.403225748';
+const ENTRY_SCHOOL = 'entry.1173524453';
+const ENTRY_EMAIL  = 'entry.1189360225';
+const ENTRY_NOTE   = 'entry.1298521177';
+
+function submitForm() {
+  const inputs = document.querySelectorAll('#formWrap input, #formWrap textarea');
+  const name = inputs[0].value.trim(), school = inputs[1].value.trim(),
+        email = inputs[2].value.trim(), note = inputs[3].value.trim();
+  if (!name || !email) { inputs[!name ? 0 : 2].focus(); return; }
+  const body = new URLSearchParams();
+  body.append(ENTRY_NAME, name); body.append(ENTRY_SCHOOL, school);
+  body.append(ENTRY_EMAIL, email); body.append(ENTRY_NOTE, note);
+  fetch(FORM_ACTION, { method:'POST', mode:'no-cors', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body: body.toString() });
+  document.getElementById('formWrap').style.display = 'none';
+  document.getElementById('formSuccess').style.display = 'block';
+}
+
+document.getElementById('schoolModal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+</script>
+</body>
+</html>
