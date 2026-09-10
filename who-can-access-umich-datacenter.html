@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ICE, Palantir, Israel — Who Else Could Access UM's $1.25B Datacenter? — ØFF Independent</title>
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="ØFF Independent">
+<meta property="og:title" content="ICE, Palantir, Israel — Who Else Could Access UM's $1.25B Datacenter?">
+<meta property="og:description" content="Everything we were told about UM's datacenter might be wrong.">
+<meta property="og:image" content="https://live.staticflickr.com/65535/50044960247_2c2804eaf1_b.jpg">
+<meta property="og:image:width" content="1024">
+<meta property="og:image:height" content="683">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="ICE, Palantir, Israel — Who Else Could Access UM's $1.25B Datacenter?">
+<meta name="twitter:description" content="Everything we were told about UM's datacenter might be wrong.">
+<meta name="twitter:image" content="https://live.staticflickr.com/65535/50044960247_2c2804eaf1_b.jpg">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@300;400&family=Share+Tech+Mono&family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --black: #0c0c0c;
+  --white: #f2f2f0;
+  --mid:   #777;
+  --rule:  #ccc;
+  --mono:  'Share Tech Mono', monospace;
+  --cond:  'Barlow Condensed', sans-serif;
+  --body:  'Barlow', sans-serif;
+  --serif: Georgia, 'Times New Roman', serif;
+  --pixel: 'Press Start 2P', monospace;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--white);
+  color: var(--black);
+  font-family: var(--body);
+  font-weight: 300;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+@keyframes gr {
+  0%,100%{ transform:translate(0,0) }
+  25%    { transform:translate(-2px,-1px) }
+  50%    { transform:translate(1px,2px) }
+  75%    { transform:translate(-1px,1px) }
+}
+.grain {
+  position: fixed; inset:-50%;
+  width:200%; height:200%;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 180px;
+  opacity: 0.03;
+  pointer-events: none;
+  z-index: 999;
+  animation: gr 0.3s steps(1) infinite;
+}
+
+.wrap {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 0 28px;
+}
+
+@keyframes blink {
+  0%,49.9%{ opacity:1 } 50%,100%{ opacity:0 }
+}
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 0 16px;
+  border-bottom: 2px solid var(--black);
+}
+.logo {
+  font-family: var(--pixel);
+  font-size: 13px;
+  color: var(--black);
+  text-decoration: none;
+  letter-spacing: .04em;
+}
+.status {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--mid);
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.status-dot {
+  width: 5px; height: 5px;
+  background: var(--black);
+  border-radius: 50%;
+  animation: blink 1.4s step-end infinite;
+  flex-shrink: 0;
+}
+
+.topbar-nav {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+.topbar-link {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--mid);
+  text-decoration: none;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  transition: color .2s;
+}
+.topbar-link:hover { color: var(--black); }
+.article-header {
+  padding: 40px 0 24px;
+}
+
+.article-kicker {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .26em;
+  color: var(--mid);
+  text-transform: uppercase;
+  margin-bottom: 28px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.article-kicker::after {
+  content: ''; flex:1; height:1px;
+  background: var(--rule); max-width: 80px;
+}
+
+.article-hed {
+  font-family: var(--cond);
+  font-weight: 900;
+  font-size: clamp(34px, 6.5vw, 56px);
+  line-height: .92;
+  letter-spacing: -.012em;
+  text-transform: uppercase;
+  color: var(--black);
+  margin-bottom: 20px;
+}
+.article-hed .word { display: block; }
+.article-hed .word-inner { display: inline; }
+
+.article-dek {
+  font-family: var(--serif);
+  font-size: 14px;
+  font-style: italic;
+  line-height: 1.9;
+  color: var(--mid);
+  letter-spacing: .015em;
+  margin-bottom: 16px;
+  max-width: 580px;
+}
+
+.article-meta {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .16em;
+  color: var(--mid);
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.article-meta-sep { color: var(--rule); }
+
+.lede-p { margin-bottom: 22px; }
+
+/* ARTICLE BODY */
+.article-body { padding: 0; }
+
+.article-hero { margin: 0 0 44px; }
+.article-hero img {
+  width: 100%;
+  display: block;
+  filter: grayscale(1) contrast(1.08);
+  border: 1px solid var(--black);
+}
+.article-hero-caption {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .06em;
+  color: var(--mid);
+  padding-top: 10px;
+  line-height: 1.6;
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.article-hero-caption .credit { text-transform: uppercase; letter-spacing: .14em; white-space: nowrap; }
+
+.article-lede {
+  font-family: var(--serif);
+  font-size: 16px;
+  line-height: 2;
+  color: var(--black);
+  letter-spacing: .015em;
+  padding-bottom: 40px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.rv { }
+.rv.on { }
+.rv.d1 { }
+.rv.d2 { }
+.rv.d3 { }
+
+.article-section-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .26em;
+  color: var(--mid);
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.article-section-label::after {
+  content: ''; flex:1; height:1px;
+  background: var(--rule); max-width: 80px;
+}
+
+.article-section-hed {
+  font-family: var(--cond);
+  font-weight: 900;
+  font-size: clamp(28px, 5vw, 44px);
+  line-height: .95;
+  letter-spacing: -.02em;
+  text-transform: uppercase;
+  color: var(--black);
+  margin-bottom: 28px;
+}
+
+.article-graf {
+  font-family: var(--serif);
+  font-size: 16px;
+  line-height: 2;
+  color: var(--black);
+  letter-spacing: .015em;
+  margin-bottom: 22px;
+}
+.article-graf:last-child { margin-bottom: 0; }
+
+.article-section {
+  padding: 48px 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.pullquote {
+  border-left: 3px solid var(--black);
+  padding: 20px 0 20px 24px;
+  margin: 36px 0;
+}
+.pullquote-text {
+  font-family: var(--serif);
+  font-weight: bold;
+  font-style: italic;
+  font-size: clamp(18px, 3vw, 26px);
+  letter-spacing: -.01em;
+  line-height: 1.35;
+  color: var(--black);
+}
+
+.stat-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1px;
+  background: var(--rule);
+  border: 1px solid var(--rule);
+  margin: 36px 0;
+}
+.stat-cell { background: var(--white); padding: 24px 20px; }
+.stat-num {
+  font-family: var(--cond);
+  font-weight: 900;
+  font-size: clamp(30px, 6vw, 48px);
+  letter-spacing: -.03em;
+  line-height: 1;
+  color: var(--black);
+  margin-bottom: 8px;
+}
+.stat-label {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--mid);
+  line-height: 1.6;
+}
+
+a {
+  color: var(--black);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: var(--rule);
+  transition: text-decoration-color .2s;
+}
+a:hover { text-decoration-color: var(--black); }
+
+.article-note {
+  font-family: var(--mono);
+  font-size: 10px;
+  line-height: 1.8;
+  color: var(--mid);
+  letter-spacing: .01em;
+  padding-top: 16px;
+  padding-bottom: 16px;
+  border-top: 1px solid var(--rule);
+  margin-top: 16px;
+  margin-bottom: 0;
+}
+
+.article-cta {
+  padding: 56px 0 48px;
+  border-top: 2px solid var(--black);
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 36px;
+  flex-wrap: wrap;
+}
+.article-cta-text {
+  font-family: var(--cond);
+  font-weight: 900;
+  font-size: clamp(32px, 6vw, 52px);
+  line-height: .95;
+  letter-spacing: -.02em;
+  text-transform: uppercase;
+  color: var(--black);
+}
+
+.btn {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--white);
+  background: var(--black);
+  border: 1px solid var(--black);
+  padding: 13px 26px;
+  cursor: pointer;
+  text-decoration: none;
+  flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+  transition: color .3s;
+  display: inline-block;
+}
+.btn::before {
+  content: ''; position: absolute; inset: 0;
+  background: var(--white);
+  transform: translateY(100%);
+  transition: transform .35s cubic-bezier(.22,1,.36,1);
+}
+.btn:hover { color: var(--black); text-decoration: none; }
+.btn:hover::before { transform: translateY(0); }
+.btn-label { position: relative; z-index: 1; }
+
+.bottombar {
+  border-top: 1px solid var(--rule);
+  padding: 16px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 32px;
+}
+.bottombar-copy {
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--mid);
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+.bottombar-links { display: flex; gap: 22px; }
+.bottombar-links a {
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--mid);
+  text-decoration: none;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  transition: color .2s;
+}
+.bottombar-links a:hover { color: var(--black); }
+
+.modal-bg {
+  display: none; position:fixed; inset:0;
+  background: rgba(242,242,240,.97);
+  z-index: 800;
+  align-items: center; justify-content:center;
+  padding: 24px;
+}
+.modal-bg.open { display: flex; }
+.modal {
+  background: var(--white);
+  border: 2px solid var(--black);
+  padding: 40px;
+  max-width: 480px; width:100%;
+  position: relative;
+  animation: mIn .4s cubic-bezier(.22,1,.36,1);
+}
+@keyframes mIn {
+  from { opacity:0; transform:translateY(16px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+.modal-close {
+  position: absolute; top:16px; right:16px;
+  font-family: var(--mono); font-size:10px;
+  color: var(--mid); background:none; border:none;
+  cursor: pointer; letter-spacing:.14em;
+  text-transform: uppercase; transition: color .2s;
+}
+.modal-close:hover { color: var(--black); }
+.modal-title {
+  font-family: var(--cond); font-weight: 900;
+  font-size: 30px; text-transform: uppercase;
+  letter-spacing: -.01em; color: var(--black);
+  margin-bottom: 28px; line-height: 1.05;
+}
+.form-field { margin-bottom: 16px; }
+.form-field label {
+  display: block; font-family: var(--mono);
+  font-size: 9px; letter-spacing:.2em;
+  color: var(--mid); text-transform:uppercase; margin-bottom: 7px;
+}
+.form-field input, .form-field textarea {
+  width: 100%; background: transparent;
+  border: none; border-bottom: 1px solid var(--black);
+  color: var(--black); font-family: var(--mono);
+  font-size: 13px; padding: 7px 0; outline:none; border-radius: 0;
+}
+.form-field textarea { resize:none; height:56px; }
+.form-note {
+  font-family: var(--mono); font-size:10px;
+  color: var(--mid); margin-top:16px; line-height:1.7; letter-spacing: .03em;
+}
+.form-success {
+  display: none; font-family: var(--cond);
+  font-size: 30px; font-weight:900;
+  text-transform: uppercase; color: var(--black);
+  letter-spacing: -.01em; line-height:1.2;
+}
+
+</style>
+</head>
+<body>
+
+<div class="grain"></div>
+
+<div class="modal-bg" id="schoolModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">[ close ]</button>
+    <div class="modal-title">Join us.</div>
+    <div id="formWrap">
+      <div class="form-field"><label>Your name</label><input type="text"></div>
+      <div class="form-field"><label>Your school</label><input type="text"></div>
+      <div class="form-field"><label>Email</label><input type="email"></div>
+      <div class="form-field">
+        <label>What's happening at your school? (optional)</label>
+        <textarea></textarea>
+      </div>
+      <button class="btn" style="margin-top:22px;width:100%;" onclick="submitForm()">
+        <span class="btn-label">[ join ]</span>
+      </button>
+      <p class="form-note">By clicking join, you agree to receive next steps via email. No spam, guaranteed. View our <a href="https://offmovement.org/privacy" target="_blank">Privacy Policy</a> for more information.</p>
+      <p class="form-note" style="margin-top:10px;">By joining, you confirm that you are located in the United States.</p>
+    </div>
+    <div class="form-success" id="formSuccess">
+      Received.<br><br>
+      <span style="font-family:var(--mono);font-size:12px;font-weight:400;text-transform:none;letter-spacing:.05em;">We'll be in touch.</span>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="topbar">
+    <a class="logo" href="https://offmovement.org">OFF</a>
+    <div class="topbar-nav">
+      <a class="topbar-link" href="index.html">Join Us</a>
+    </div>
+  </div>
+
+  <div class="article-header">
+    <div class="article-kicker">Investigation</div>
+
+    <h1 class="article-hed">
+      <span class="word"><span class="word-inner">ICE, Palantir,</span></span>
+      <span class="word"><span class="word-inner">Israel — Who Else</span></span>
+      <span class="word"><span class="word-inner">Could Access UM's</span></span>
+      <span class="word"><span class="word-inner">$1.25B Datacenter?</span></span>
+    </h1>
+
+    <div class="article-dek" id="articleDek" style="font-size: 17px;">
+      Everything we were told about UM's datacenter might be wrong.
+    </div>
+
+    <div class="article-meta" id="articleMeta">
+      <span>Published September 10, 2026</span>
+    </div>
+  </div>
+
+  <div class="article-body">
+
+    <div class="article-hero">
+      <img src="https://live.staticflickr.com/65535/50044960247_2c2804eaf1_b.jpg" alt="ICE Enforcement and Removal Operations agents making an arrest as part of Operation Cross Check">
+      <div class="article-hero-caption">
+        <span>ICE Enforcement and Removal Operations agents conduct a fugitive arrest as part of "Operation Cross Check."</span>
+        <span class="credit">U.S. ICE / Public Domain</span>
+      </div>
+    </div>
+
+    <!-- LEDE -->
+    <div class="article-lede" id="articleLede" style="border-bottom: none; padding-bottom: 0;">
+      <p class="lede-p">In the early days of the Manhattan Project, the American public was deceived with stories of industrial progress and patriotic duty while thousands of workers unknowingly built components for the atomic bomb. The government doled out tidy lies about manufacturing "electrical equipment" and "national defense supplies" while a world-altering weapon was pieced together behind closed doors.</p>
+      <p class="lede-p">A similar smokescreen is rolling over Washtenaw County today.</p>
+      <p class="lede-p">When the University of Michigan <a href="https://record.umich.edu/articles/u-m-los-alamos-to-develop-ai-research-facility-in-michigan/" target="_blank">announced</a> its partnership with Los Alamos National Laboratory to build a $1.25B datacenter in Ypsilanti Township, the administration manufactured a rosy narrative: LANL <a href="https://research.umich.edu/research-at-michigan/lanl-faq/" target="_blank">will use</a> the datacenter to conduct national security and defense-related research, including peaceful nuclear stockpile stewardship. The University of Michigan will maintain a separate share of compute power to pursue breakthrough research in medicine, technology, and engineering.</p>
+      <p class="lede-p">Yet, this rhetoric is merely a red herring: What the University fails to disclose are the countless entities — domestic and foreign — with legally sanctioned access to the datacenter's resources. These are not hypothetical risks, but validated pathways baked into the facility's governance that the University has kept hidden from the public's eye.</p>
+    </div>
+
+    <!-- BODY -->
+    <div class="article-section rv" style="border-bottom: none; padding-bottom: 0; padding-top: 0;">
+
+      <p class="article-graf rv d1">
+        Consider one such legal mechanism: <a href="https://www.dhs.gov/sites/default/files/2025-04/25_0315_HSA-2002-updated-through-Mar2025.pdf.pdf" target="_blank">Section 309(a)(1) of the Homeland Security Act of 2002</a>. The statute explicitly grants DHS and its agencies (such as ICE) permission to use national laboratory facilities to execute their mission. DHS has openly bragged that facilities like the proposed datacenter are within <a href="https://www.dhs.gov/science-and-technology/dhs-and-doe-national-laboratories" target="_blank">"easy reach"</a> — which is unsurprising, given <a href="https://www.dhs.gov/sites/default/files/2025-08/25_0804_st_onl_factsheet.pdf" target="_blank">their liberal use of national laboratories for a wide range of applications</a>. This raises the alarming prospect of ICE accessing the datacenter to support their <a href="https://www.techpolicy.press/dhs-ai-surveillance-arsenal-grows-as-agency-defies-courts/" target="_blank">AI surveillance efforts</a>, which could supercharge <a href="https://www.nilc.org/articles/ice-is-detaining-indiscriminately-and-releasing-almost-no-one/" target="_blank">unlawful detentions</a> and the <a href="https://www.cbsnews.com/news/student-protesters-visas-green-cards-trump-ice-detentions-free-speech/" target="_blank">deportation of student activists</a>.
+      </p>
+
+      <p class="article-graf rv d2">
+        The controversial tech giant Palantir could follow ICE's lead. DHS has <a href="https://www.techradar.com/pro/palantir-awarded-usd1-billion-dhs-contract-for-ai-and-data-analytics-rollout" target="_blank">heavily contracted the company</a> for data aggregation work — spending over <a href="https://www.wired.com/story/department-homeland-security-ice-billion-dollar-agreement-palantir/" target="_blank">$1 billion across a 5 year period</a>. This massive purchase includes access to Palantir's Foundry software, which <a href="https://www.business-humanrights.org/en/latest-news/usa-palantir-at-center-of-federal-data-integration-as-privacy-surveillance-concerns-grow/" target="_blank">experts have repeatedly warned</a> is a mass surveillance tool that can consolidate public records to create highly detailed, searchable profiles of citizens. Alarmingly, Foundry is explicitly <a href="https://www.businesswire.com/news/home/20260212887851/en" target="_blank">designed to be deployable on government computing infrastructure</a>.
+      </p>
+
+      <p class="article-graf rv d1">
+        What emerges from these findings is not a benign datacenter with the sole purpose of conducting public good research. Instead, it is the silhouette of a facility that could become a turnkey engine for state surveillance, primed to target everyday citizens, immigrants, and student activists alike.
+      </p>
+
+      <p class="article-graf rv d2">
+        This is only Exhibit A.
+      </p>
+
+      <p class="article-graf rv d1">
+        A separate, far broader legal basis for third-party datacenter access is through Cooperative Research and Development Agreements (CRADAs) and Proprietary User Agreements (PUAs). These agreements have historically allowed defense corporations such as <a href="https://www.osti.gov/servlets/purl/1098063" target="_blank">Lockheed Martin</a> and <a href="https://www.ornl.gov/sites/default/files/2019-11/Raytheon%20Phase%202%20Final%20Report.pdf" target="_blank">Raytheon</a> to develop their technology at national laboratories. Recently, both companies have announced new AI-for-warfare ventures — including <a href="https://www.lockheedmartin.com/en-us/news/features/2026/the-new-drone-threat-demands-a-new-defense.html" target="_blank">autonomous combat drones</a> — that demand industrial-scale computing resources to develop. Their previous work with national laboratories would seemingly suggest UM's datacenter is an attractive launchpad to build this technology.
+      </p>
+
+      <p class="article-graf rv d2">
+        CRADAs and PUAs may also facilitate datacenter access for foreign defense corporations. The BIRD program partners with DHS to fund joint U.S.-Israeli corporate ventures <a href="https://dhs.gov/science-and-technology/bird-hls" target="_blank">developing surveillance technology</a>, including advanced video analytics, facial recognition, biometric sensors, infrastructure mapping, and autonomous drone tracking frameworks. <a href="https://www.biospace.com/bird-israel-u-s-binational-industrial-r-and-amp-d-foundation-to-invest-8-million-in-10-new-projects" target="_blank">At least one such company</a> — Aeronautics — has been <a href="https://www.militaryaerospace.com/uncrewed/article/16718124/aai-aeronautics-defense-systems-deliver-orbiter-unmanned-aircraft" target="_blank">contracted by the Israeli government</a> and markets itself as <a href="https://aeronautics-sys.com/systems/orbiter-4/" target="_blank">"having close connections to the IDF and Israeli Air Force."</a> And this is just what we know: The Israeli Ministry of Defense regularly signs domestic contracts that <a href="https://www.privacyshield.gov/ps/article?id=Israel-Selling-to-the-Government" target="_blank">never face public disclosure</a>, meaning deeper entanglements with other defense tech companies is impossible to rule out.
+      </p>
+
+      <p class="article-graf rv d1">
+        In the face of an <a href="https://www.bbc.com/news/articles/cde3eyzdr63o" target="_blank">ongoing genocide in Palestine</a>, there should have been serious community engagement efforts — at minimum — before partnering with an institution working with Israeli entities to expand the nation's defense capabilities. The University should have also required extensive disclosure from LANL officials regarding exactly which foreign entities could access the datacenter's resources, and for what purposes. Instead, they have effectively shielded this information from the public by failing to disclose these backdoors: A search of <a href="https://record.umich.edu/articles/u-m-evaluating-sites-for-high-performance-computing-facility-to-advance-public-research/" target="_blank">University Record coverage</a>, the <a href="https://research.umich.edu/research-at-michigan/lanl-faq/" target="_blank">LANL-FAQ page</a>, and public statements from University officials offers no mention of how CRADAs and PUAs might be used at the planned datacenter. Without any legally binding agreement between the township and University regarding the datacenter's <a href="https://www.lanl.gov/science-engineering/science-facilities" target="_blank">user status</a>, access by military contractors is continuously left to <a href="https://science.osti.gov/User-Facilities/Policies-and-Processes/Designation-Process" target="_blank">the DOE's discretion once</a> the datacenter is operational.
+      </p>
+
+      <p class="article-graf rv d2">
+        The implications of these findings are stunning, and reveal a damning lack of transparency about the planned datacenter. What has been officially portrayed as an exclusive partnership between the University and LANL fails to disclose legal backdoors that are — while technically public — buried in dense statutory texts, government databases, and institutional repositories. Without knowing this information, community members are unable to meaningfully assess the capabilities of a facility that <a href="https://record.umich.edu/articles/u-m-evaluating-sites-for-high-performance-computing-facility-to-advance-public-research/" target="_blank">could profoundly impact their lives</a>. It begs the question: What kind of information should the University be allowed to conceal as a public institution? And perhaps more importantly: What is the University becoming?
+      </p>
+
+      <p class="article-graf rv d1">
+        Pushback by Ypsilanti Township residents has already been fierce, and instead of thoroughly addressing community concerns, the University has blazed forward with the project by <a href="https://michiganadvance.com/2026/06/26/democrats-seek-to-end-university-of-michigans-exemption-from-local-zoning-laws/" target="_blank">using special privileges to bypass local zoning requirements</a>, site reviews, and township votes. When community officials exercised one of the few powers they did have – blocking water and sewage hookups for hyperscale computing sites – the University threatened to sue, citing <a href="https://www.404media.co/university-claims-withholding-water-from-nuclear-weapons-data-center-is-unlawfully-discriminatory-to-data-centers/" target="_blank">"unlawful discrimination"</a> against datacenters. It is a jarring abuse of institutional power that Representative Debbie Dingell has found <a href="https://x.com/RepDebDingell/status/2087574625030930575?s=20" target="_blank">"deeply disturbing"</a> and even made <a href="https://www.fox2detroit.com/news/university-michigan-regent-calls-pause-proposed-data-center-ypsilanti-twp" target="_blank">one of the University's own regents wary</a>.
+      </p>
+
+      <p class="article-graf rv d2">
+        Much like Ypsilanti Township residents, the broader Michigan community now finds itself wondering who the University ultimately serves — and for good reason. Funding a datacenter that could be used to build and implement mass surveillance technology, arbitrarily deport immigrants, and build autonomous agents for warfare is not <a href="https://looktomichigan.umich.edu/about/" target="_blank">"service to the public good."</a> And discarding the concerns of taxpayers, students, and elected officials, all while concealing key details about how the datacenter may be used is not commitment to <a href="https://eico.umich.edu/vpr/" target="_blank">"a culture of trust and transparency."</a>
+      </p>
+
+      <p class="article-graf rv d1">
+        Pieces like this usually end with a call to arms focused on the grievance at hand. This won't. Because the problem isn't the datacenter. Rogue leadership that has abandoned the University's most sacred values is. And that doesn't call for petitions, or open letters, or polite requests. It calls for rallies, walkouts, and sit-ins until their house of cards comes tumbling down. Because if one thing is certain, the University has shown it won't stop until there's a cost.
+      </p>
+
+      <p class="article-graf rv d3">Right now, there isn't one.</p>
+
+      <div class="article-note rv d1">
+        This analysis is based on federal statutes, DOE and DHS directives, congressional correspondence, court and regulatory filings, university disclosures, and independent reporting on the University of Michigan–Los Alamos National Laboratory datacenter project. It does not constitute legal advice.<br><br>
+        Questions? Concerns? The OFF team can be reached at <a href="mailto:info@offmovement.org">info@offmovement.org</a>.
+      </div>
+    </div>
+
+  </div>
+
+  <div class="bottombar">
+    <span class="bottombar-copy">offmovement.org</span>
+    <div class="bottombar-links">
+      <a href="#" onclick="openModal();return false;">join us</a>
+      <a href="https://offmovement.org/privacy" target="_blank">privacy</a>
+    </div>
+  </div>
+
+</div>
+
+<script>
+
+function openModal()  { document.getElementById('schoolModal').classList.add('open'); }
+function closeModal() { document.getElementById('schoolModal').classList.remove('open'); }
+
+const FORM_ACTION = 'https://docs.google.com/forms/d/e/1FAIpQLSe9XfA60dlUWyIXoQA_LGn1bYcGNDxJUgmrK3H-8jPOMAk4_g/formResponse';
+const ENTRY_NAME   = 'entry.403225748';
+const ENTRY_SCHOOL = 'entry.1173524453';
+const ENTRY_EMAIL  = 'entry.1189360225';
+const ENTRY_NOTE   = 'entry.1298521177';
+
+function submitForm() {
+  const inputs = document.querySelectorAll('#formWrap input, #formWrap textarea');
+  const name = inputs[0].value.trim(), school = inputs[1].value.trim(),
+        email = inputs[2].value.trim(), note = inputs[3].value.trim();
+  if (!name || !email) { inputs[!name ? 0 : 2].focus(); return; }
+  const body = new URLSearchParams();
+  body.append(ENTRY_NAME, name); body.append(ENTRY_SCHOOL, school);
+  body.append(ENTRY_EMAIL, email); body.append(ENTRY_NOTE, note);
+  fetch(FORM_ACTION, { method:'POST', mode:'no-cors', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body: body.toString() });
+  document.getElementById('formWrap').style.display = 'none';
+  document.getElementById('formSuccess').style.display = 'block';
+}
+
+document.getElementById('schoolModal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+</script>
+</body>
+</html>
